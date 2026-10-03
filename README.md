@@ -40,6 +40,7 @@ Comprehensive guides and architectural references are available in the [`docs/`]
 
 - 🏛️ **[System Architecture & SOLID Design](docs/architecture/overview.md)**
 - 📋 **[PromptBuilder API Reference](docs/core/builder.md)**
+- 🤖 **[AI Prompt Generator (Meta-Prompting)](docs/meta/ai-prompt-generator.md)**
 - 📐 **[PromptSections AST & Specification Standard](docs/core/sections.md)**
 - 🛡️ **[Middleware & Anti-Pattern Quality Gate](docs/middleware/overview.md)**
 - ⚡ **[Renderers & Dual-Schema Token Optimization](docs/renderers/overview.md)**
@@ -88,6 +89,26 @@ prompt = (
 # Use with any LangChain LLM
 # chain = prompt | llm.with_structured_output(CodeReview)
 # result = chain.invoke({"code": "def run(): ..."})
+```
+
+### 2. Auto-Generate Prompts from User Tasks (Meta-Prompting)
+
+Have an LLM design production-grade prompts for you following the specification (§20):
+
+```python
+from promptwright import generate_prompt_from_task
+
+spec = generate_prompt_from_task(
+    user_task="Extract invoice total, vendor, line items, and flag overdue balances from emails.",
+    llm=llm,
+)
+
+# 1. Output clean Markdown ready to copy/paste
+print(spec.to_markdown())
+
+# 2. Or convert directly to a live LangChain PromptBuilder
+builder = spec.to_builder()
+prompt = builder.build()
 ```
 
 ---

@@ -24,8 +24,10 @@ docs/
 │   └── classification.md     # Use Case 2: Intent & Category Classification
 ├── few-shot/                 # Static and dynamic few-shot example selection
 │   └── dynamic-selectors.md  # Dynamic vectorstore-backed example selection
-└── evaluation/               # Golden Set evaluation and regression testing
-    └── regression-runner.md  # GoldenSetRunner, metrics, and CI/CD reporting
+├── evaluation/               # Golden Set evaluation and regression testing
+│   └── regression-runner.md  # GoldenSetRunner, metrics, and CI/CD reporting
+└── meta/                     # AI Prompt Engineering agent
+    └── ai-prompt-generator.md# LLM-driven prompt generation from task description
 ```
 
 ---
@@ -36,6 +38,7 @@ docs/
 |---|---|---|
 | **Architecture** | [`architecture/overview.md`](architecture/overview.md) | How SOLID principles are implemented across PromptWright |
 | **Builder Guide** | [`core/builder.md`](core/builder.md) | Step-by-step guide to constructing prompts with `PromptBuilder` |
+| **AI Prompt Generator** | [`meta/ai-prompt-generator.md`](meta/ai-prompt-generator.md) | Using LLM to engineer prompts from user task descriptions |
 | **Data Extraction** | [`presets/extraction.md`](presets/extraction.md) | Extracting structured entities without hallucination |
 | **Classification** | [`presets/classification.md`](presets/classification.md) | Labeling and intent routing with strict taxonomy enforcement |
 | **Quality Gate** | [`middleware/overview.md`](middleware/overview.md) | Compile-time anti-pattern detection (§15) and validation |
