@@ -182,6 +182,58 @@ Run `.validate(strict=True)` to turn warnings into compile-time exceptions.
 
 ---
 
+## ⚡ Dual-Schema Token Optimization
+
+Avoid burning redundant tokens when using function-calling models (`with_structured_output`):
+
+```python
+# mode="full": Complete JSON Schema in prompt (default for completion models)
+# mode="concise": Compact bullet summary of fields and types (saves ~60% schema tokens)
+# mode="tools_only": Zero prompt schema tokens — model relies strictly on tool definition
+builder.output_schema(Invoice, mode="tools_only")
+```
+
+---
+
+## 🔍 Dynamic Few-Shot Selection
+
+Pass any LangChain `BaseExampleSelector` (e.g. Chroma/FAISS semantic search) or custom selector:
+
+```python
+from promptwright import PromptBuilder
+
+builder = (
+    PromptBuilder()
+    .role("Customer Support")
+    .task("Categorize request")
+    .inputs(input="User request")
+    .example_selector(my_semantic_similarity_selector)
+)
+```
+
+---
+
+## 📊 Golden Set Regression Testing (PromtEngineering.md §17)
+
+Treat prompts as versioned code with automated regression benchmarking:
+
+```python
+from promptwright import GoldenSet, GoldenSetRunner
+
+# 1. Load golden test cases
+golden_set = GoldenSet.from_file("tests/golden_set.json")
+
+# 2. Benchmark your chain
+runner = GoldenSetRunner(chain=chain, golden_set=golden_set)
+report = runner.run()
+
+# 3. Print or export clean markdown summary for CI/CD
+print(report.summary())
+# -> Pass Rate, Latency, and individual case breakdown
+```
+
+---
+
 ## 🧪 Testing
 
 Run test suite:
