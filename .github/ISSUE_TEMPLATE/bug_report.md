@@ -12,7 +12,7 @@ A clear and concise description of what the bug is.
 **To Reproduce**
 Steps or minimal Python snippet to reproduce the behavior:
 ```python
-from promptwright import PromptBuilder
+from promptsight import PromptBuilder
 
 # Reproduction code here
 ```
