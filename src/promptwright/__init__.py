@@ -34,6 +34,12 @@ from promptwright.presets import (
     create_classification_prompt,
     create_extraction_prompt,
 )
+from promptwright.eval import (
+    GoldenSet,
+    GoldenSetReport,
+    GoldenSetRunner,
+    GoldenTestCase,
+)
 from promptwright.few_shot import ExampleSelector, StaticExampleSelector
 from promptwright.renderers import MarkdownSectionRenderer, PromptRenderer
 from promptwright.sections import ContextBlock, Example, PromptSections
@@ -82,4 +88,9 @@ __all__ = [
     "create_extraction_prompt",
     "create_classification_prompt",
     "DefaultClassificationResult",
+    # Evaluation (Challenge 4)
+    "GoldenSetRunner",
+    "GoldenSet",
+    "GoldenTestCase",
+    "GoldenSetReport",
 ]

@@ -117,7 +117,8 @@ class MarkdownSectionRenderer(PromptRenderer):
         if custom_template:
             if self.escape_braces_for_fstring:
                 from promptwright.utils.escaping import escape_fstring_braces
-                return escape_fstring_braces(custom_template, allowed_variables=sections.inputs.keys())
+                allowed = set(sections.inputs.keys()) if sections.inputs else None
+                return escape_fstring_braces(custom_template, allowed_variables=allowed)
             return custom_template
 
         if not sections.inputs:

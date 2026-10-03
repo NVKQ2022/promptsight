@@ -43,20 +43,18 @@ def escape_fstring_braces(
     # Protect already escaped braces {{ and }}
     temp = re.sub(r"\{\{|\}\}", _protect, text)
 
-    # Protect allowed variables: e.g. {var_name}
-    if allowed_set:
-        def _protect_var(match: re.Match[str]) -> str:
-            nonlocal counter
-            var_name = match.group(1)
-            if var_name in allowed_set:
-                token = f"__PW_VAR_{counter}__"
-                counter += 1
-                placeholder_map[token] = match.group(0)
-                return token
-            # Not in allowed set -> leave for escaping
-            return match.group(0)
+    # Protect variables: e.g. {var_name}
+    def _protect_var(match: re.Match[str]) -> str:
+        nonlocal counter
+        var_name = match.group(1)
+        if allowed_variables is None or var_name in allowed_set:
+            token = f"__PW_VAR_{counter}__"
+            counter += 1
+            placeholder_map[token] = match.group(0)
+            return token
+        return match.group(0)
 
-        temp = re.sub(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}", _protect_var, temp)
+    temp = re.sub(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}", _protect_var, temp)
 
     # Step 2: Double remaining single { and }
     temp = temp.replace("{", "{{").replace("}", "}}")
