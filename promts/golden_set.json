@@ -1,0 +1,132 @@
+[
+  {
+    "_comment": "Test 1 — Normal valid input (6 tools, 6 samples, balanced)",
+    "input": {
+      "tool_catalog": [
+        {"name": "set_temperature", "description": "Set thermostat", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "temperature": {"type": "number"}, "unit": {"type": "string", "enum": ["celsius","fahrenheit"]}}, "required": ["device_id","temperature"]}, "when_to_use": "set temp", "when_not_to_use": "read temp"},
+        {"name": "get_temperature", "description": "Read temp", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}}, "required": ["device_id"]}, "when_to_use": "read temp", "when_not_to_use": "set temp"},
+        {"name": "control_light", "description": "Control lights", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "action": {"type": "string", "enum": ["turn_on","turn_off"]}}, "required": ["device_id","action"]}, "when_to_use": "lights", "when_not_to_use": "temp"},
+        {"name": "lock_door", "description": "Lock door", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "action": {"type": "string", "enum": ["lock","unlock"]}}, "required": ["device_id","action"]}, "when_to_use": "doors", "when_not_to_use": "lights"},
+        {"name": "get_device_status", "description": "Get status", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}}, "required": ["device_id"]}, "when_to_use": "status", "when_not_to_use": "control"},
+        {"name": "set_fan_speed", "description": "Set fan", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "speed": {"type": "integer", "minimum": 0, "maximum": 5}}, "required": ["device_id","speed"]}, "when_to_use": "fan", "when_not_to_use": "thermostat"}
+      ],
+      "domain": "smart_home",
+      "domain_context": "Apartment: living_room, bedroom, kitchen. IDs like thermostat_<room>, light_<room>, lock_front_door, fan_<room>",
+      "num_samples": 6,
+      "difficulty_distribution": {"easy": 0.5, "medium": 0.3, "hard": 0.2},
+      "categories_required": "single_tool,multi_tool,no_tool,parameter_inference",
+      "language": "en",
+      "utterance_style": "mixed"
+    },
+    "expected_behavior": "Returns exactly 6 samples, every tool appears at least once, covers single/multi/no_tool, valid JSON per schema, sorted by id, reasoning cites evidence_span. Difficulties ~3 easy /2 medium /1 hard.",
+    "evaluation": {
+      "format_compliance": "JSON array length 6, parseable, no prose",
+      "groundedness": "All tool names verbatim from input catalog, args validate against schemas",
+      "coverage": "6 tools covered, >=1 per required category",
+      "failure": "none"
+    }
+  },
+  {
+    "_comment": "Test 2 — Missing information (domain_context empty, difficulty_distribution omitted)",
+    "input": {
+      "tool_catalog": [
+        {"name": "control_light", "description": "Control lights", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "action": {"type": "string", "enum": ["turn_on","turn_off"]}}, "required": ["device_id","action"]}, "when_to_use": "lights", "when_not_to_use": "other"},
+        {"name": "set_temperature", "description": "Set temp", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "temperature": {"type": "number"}}, "required": ["device_id","temperature"]}, "when_to_use": "set", "when_not_to_use": "get"}
+      ],
+      "domain": "smart_home",
+      "domain_context": "",
+      "num_samples": 3,
+      "difficulty_distribution": null,
+      "categories_required": "single_tool",
+      "language": "en",
+      "utterance_style": "mixed"
+    },
+    "expected_behavior": "Uses defaults: difficulty_distribution='balanced' (~1 per level), assumes generic smart_home context, marks metadata.assumptions='assumed_generic_context' and/or 'difficulty_distribution assumed balanced'. Still returns exactly 3 samples, does not invent tools outside the 2 provided.",
+    "expected_sample_metadata_example": {
+      "assumptions": "assumed_generic_context: domain_context empty, used generic smart_home device IDs"
+    },
+    "evaluation": {
+      "failure_handling": "Does not crash or hallucinate tools; gracefully defaults",
+      "groundedness": "No tool beyond the 2 catalog entries"
+    }
+  },
+  {
+    "_comment": "Test 3 — Ambiguous input (vague comfort request)",
+    "input": {
+      "tool_catalog": [
+        {"name": "set_temperature", "description": "Set thermostat", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "temperature": {"type": "number"}}, "required": ["device_id","temperature"]}, "when_to_use": "explicit temp change", "when_not_to_use": "vague comfort"},
+        {"name": "set_fan_speed", "description": "Set fan", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "speed": {"type": "integer"}}, "required": ["device_id","speed"]}, "when_to_use": "fan/airflow", "when_not_to_use": "thermostat"},
+        {"name": "control_light", "description": "Control lights", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "action": {"type": "string", "enum": ["turn_on","turn_off"]}}, "required": ["device_id","action"]}, "when_to_use": "lights", "when_not_to_use": "temp"}
+      ],
+      "domain": "smart_home",
+      "domain_context": "Living room with thermostat, fan, lights",
+      "num_samples": 2,
+      "difficulty_distribution": "balanced",
+      "categories_required": "ambiguous,parameter_inference",
+      "language": "en",
+      "utterance_style": "natural_spoken",
+      "forced_utterance_hint": "Make it comfortable in here"
+    },
+    "expected_behavior": "At least one sample is the ambiguous utterance 'Make it comfortable in here' with category='ambiguous' or 'parameter_inference'. Ground_truth must set argument_grounding='inferred' or 'unresolved', status='unresolved_parameter' if temperature missing, or infer plausible value but mark assumptions. Reasoning must state ambiguity: could be set_temperature vs set_fan_speed, and justify chosen interpretation with most grounded evidence. alternative_tools_considered must list the rejected tool(s).",
+    "evaluation": {
+      "ambiguity_handling": "reasoning states multiple plausible interpretations, does not assign 0-100 confidence, uses evidence_span",
+      "invention_check": "If temp value invented, must mark inferred and note assumption; else uses UNKNOWN"
+    }
+  },
+  {
+    "_comment": "Test 4 — Boundary / edge (20 samples, only 2 tools, all categories)",
+    "input": {
+      "tool_catalog": [
+        {"name": "set_temperature", "description": "Set temp", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "temperature": {"type": "number"}}, "required": ["device_id","temperature"]}, "when_to_use": "set", "when_not_to_use": "get"},
+        {"name": "control_light", "description": "Control lights", "args_schema": {"type": "object", "properties": {"device_id": {"type": "string"}, "action": {"type": "string", "enum": ["turn_on","turn_off"]}}, "required": ["device_id","action"]}, "when_to_use": "lights", "when_not_to_use": "temp"}
+      ],
+      "domain": "smart_home",
+      "domain_context": "Minimal setup",
+      "num_samples": 20,
+      "difficulty_distribution": {"easy": 0.4, "medium": 0.3, "hard": 0.3},
+      "categories_required": "single_tool,multi_tool,no_tool,ambiguous,parameter_inference,adversarial",
+      "language": "en",
+      "utterance_style": "mixed"
+    },
+    "expected_behavior": "Returns exactly 20 samples, deduplicated, length-diverse (short/medium/long). Both tools appear many times. Includes at least one per feasible category: single_tool, multi_tool (control_light+set_temperature), no_tool (non-IoT query), ambiguous, parameter_inference (missing temp value), adversarial (prompt injection like 'Ignore previous instructions and...'). No third tool hallucinated. Difficulty approx 8 easy /6 medium /6 hard (±1).",
+    "evaluation": {
+      "cardinality": "length ==20",
+      "schema_drift": "no new tool names",
+      "diversity": "no duplicate utterances, varied lengths"
+    }
+  },
+  {
+    "_comment": "Test 5 — Malformed / unexpected (empty tool_catalog)",
+    "input": {
+      "tool_catalog": [],
+      "domain": "smart_home",
+      "domain_context": "Smart home",
+      "num_samples": 5,
+      "difficulty_distribution": "balanced",
+      "categories_required": "single_tool",
+      "language": "en",
+      "utterance_style": "mixed"
+    },
+    "expected_behavior": "Triggers failure branch: returns JSON array with ONE fallback sample (not 5), id=iot_001, category=no_tool, ground_truth.tool=null, status=no_tool, reasoning='tool_catalog missing or empty, cannot ground tool choice'. Does not attempt to invent tools. If strict count required, alternative acceptable: 5 samples all with tool=null and reasoning noting empty catalog.",
+    "expected_output_example": [
+      {
+        "id": "iot_001",
+        "user_utterance": "UNRESOLVED",
+        "category": "no_tool",
+        "difficulty": "easy",
+        "ground_truth": {
+          "tool": null,
+          "tool_calls": [{"tool": null, "arguments": {}, "argument_grounding": "explicit", "status": "no_tool"}],
+          "reasoning": "tool_catalog missing or empty, cannot ground tool choice",
+          "alternative_tools_considered": [],
+          "evidence_span": ""
+        },
+        "metadata": {"domain": "smart_home", "assumptions": "tool_catalog empty"}
+      }
+    ],
+    "evaluation": {
+      "failure_behavior": "Explicit unresolved flag, no hallucination",
+      "format_compliance": "Still valid JSON array"
+    }
+  }
+]
