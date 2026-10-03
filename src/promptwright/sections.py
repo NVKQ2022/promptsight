@@ -34,8 +34,10 @@ class PromptSections:
     tasks: List[str] = field(default_factory=list)
     constraints: List[str] = field(default_factory=list)
     output_schema: Optional[Type[BaseModel]] = None
+    schema_mode: str = "full"  # "full" | "concise" | "tools_only"
     output_format_text: Optional[str] = None
     examples: List[Example] = field(default_factory=list)
+    example_selector: Optional[Any] = None
     verifications: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
 

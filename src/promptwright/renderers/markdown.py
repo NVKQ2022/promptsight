@@ -76,15 +76,13 @@ class MarkdownSectionRenderer(PromptRenderer):
             if sections.output_format_text:
                 out_lines.append(sections.output_format_text)
             elif sections.output_schema is not None:
-                schema_json = sections.output_schema.model_json_schema()
-                schema_str = json.dumps(schema_json, indent=2)
-                if self.escape_braces_for_fstring:
-                    schema_str = schema_str.replace("{", "{{").replace("}", "}}")
-                out_lines.append(
-                    "Return ONLY valid JSON strictly conforming to the following JSON schema:\n\n"
-                    f"```json\n{schema_str}\n```\n"
-                    "Do not include any prose, markdown explanations, or text outside the JSON."
+                from promptwright.schemas import render_schema_format_text
+                schema_text = render_schema_format_text(
+                    sections.output_schema,
+                    mode=getattr(sections, "schema_mode", "full"),
+                    escape_braces_for_fstring=self.escape_braces_for_fstring,
                 )
+                out_lines.append(schema_text)
             parts.append("\n".join(out_lines))
 
         # 7. Verification / Self-check

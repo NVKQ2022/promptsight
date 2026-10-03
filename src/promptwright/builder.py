@@ -97,9 +97,22 @@ class PromptBuilder:
         self.sections.constraints.extend(rules)
         return self
 
-    def output_schema(self, schema: Type[BaseModel]) -> "PromptBuilder":
-        """Set deterministic output shape via a Pydantic model (§11)."""
+    def output_schema(
+        self,
+        schema: Type[BaseModel],
+        mode: Literal["full", "concise", "tools_only"] = "full",
+    ) -> "PromptBuilder":
+        """Set deterministic output shape via a Pydantic model (§11).
+
+        Args:
+            schema: Pydantic BaseModel defining fields and types.
+            mode:
+                - 'full': Injects complete JSON Schema into prompt text (default).
+                - 'concise': Injects a compact summary of field names and types (saves tokens).
+                - 'tools_only': Omits schema text from prompt body, relying on LLM tool definition (zero token duplication).
+        """
         self.sections.output_schema = schema
+        self.sections.schema_mode = mode
         return self
 
     def output_format(self, text: str) -> "PromptBuilder":
