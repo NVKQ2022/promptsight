@@ -34,6 +34,7 @@ from promptwright.presets import (
     create_classification_prompt,
     create_extraction_prompt,
 )
+from promptwright.few_shot import ExampleSelector, StaticExampleSelector
 from promptwright.renderers import MarkdownSectionRenderer, PromptRenderer
 from promptwright.sections import ContextBlock, Example, PromptSections
 
@@ -45,6 +46,8 @@ __all__ = [
     "PromptSections",
     "ContextBlock",
     "Example",
+    "ExampleSelector",
+    "StaticExampleSelector",
     # Renderers (SRP & DIP)
     "PromptRenderer",
     "MarkdownSectionRenderer",

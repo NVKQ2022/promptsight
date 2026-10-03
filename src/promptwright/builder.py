@@ -55,6 +55,7 @@ class PromptBuilder:
         self._transformers: List[SectionTransformer] = []
         self._validators: List[PromptValidator] = [AntiPatternValidator(strict=False)]
         self._user_template: Optional[str] = None
+        self._custom_example_prompt: Optional[ChatPromptTemplate] = None
 
     def role(self, role: str) -> "PromptBuilder":
         """Set the role of the model (PromtEngineering.md §4.1)."""
@@ -134,6 +135,20 @@ class PromptBuilder:
                 description=description,
             )
         )
+        return self
+
+    def example_selector(
+        self,
+        selector: Any,
+        example_prompt: Optional[ChatPromptTemplate] = None,
+    ) -> "PromptBuilder":
+        """Attach a dynamic example selector (e.g. LangChain BaseExampleSelector).
+
+        Enables retrieval-augmented dynamic few-shots based on semantic similarity.
+        """
+        self.sections.example_selector = selector
+        if example_prompt is not None:
+            self._custom_example_prompt = example_prompt
         return self
 
     def verify(self, *checklist_items: str) -> "PromptBuilder":
@@ -232,20 +247,30 @@ class PromptBuilder:
         system_content = self.renderer.render_system(sections)
         messages: List[Any] = [("system", system_content)]
 
-        # 4. Handle Few-Shot examples
-        if with_few_shot and sections.examples:
-            example_prompt = ChatPromptTemplate.from_messages(
+        # 4. Handle Few-Shot examples (Static or Dynamic)
+        if with_few_shot:
+            default_example_prompt = ChatPromptTemplate.from_messages(
                 [("human", "{input}"), ("ai", "{output}")]
             )
-            examples_payload = [
-                {"input": ex.input_text, "output": ex.output_text}
-                for ex in sections.examples
-            ]
-            few_shot = FewShotChatMessagePromptTemplate(
-                examples=examples_payload,
-                example_prompt=example_prompt,
-            )
-            messages.append(few_shot)
+            ex_prompt = self._custom_example_prompt or default_example_prompt
+
+            if sections.example_selector is not None:
+                from promptwright.few_shot import ensure_base_example_selector
+                few_shot = FewShotChatMessagePromptTemplate(
+                    example_selector=ensure_base_example_selector(sections.example_selector),
+                    example_prompt=ex_prompt,
+                )
+                messages.append(few_shot)
+            elif sections.examples:
+                examples_payload = [
+                    {"input": ex.input_text, "output": ex.output_text}
+                    for ex in sections.examples
+                ]
+                few_shot = FewShotChatMessagePromptTemplate(
+                    examples=examples_payload,
+                    example_prompt=ex_prompt,
+                )
+                messages.append(few_shot)
 
         # 5. Delegate user message rendering to injected PromptRenderer
         human_content = self.renderer.render_user(sections, self._user_template)
