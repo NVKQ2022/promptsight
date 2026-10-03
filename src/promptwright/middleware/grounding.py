@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from typing import List
-
-from promptwright.middleware.base import BaseMiddleware
+from promptwright.middleware.base import SectionTransformer
 from promptwright.sections import PromptSections
 
 
-class StrictGroundingMiddleware(BaseMiddleware):
+class StrictGroundingMiddleware(SectionTransformer):
     """Enforces grounding rules and handles ambiguous / missing values without guessing."""
 
     def __init__(
@@ -33,7 +31,6 @@ class StrictGroundingMiddleware(BaseMiddleware):
 
         sections.constraints = new_constraints
 
-        # Also add a self-check verification item if not already present
         new_verifications = list(sections.verifications)
         check_item = "All claims and extracted fields are directly grounded in the source data."
         if not any("grounded" in v.lower() for v in new_verifications):
