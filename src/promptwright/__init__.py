@@ -41,6 +41,11 @@ from promptwright.eval import (
     GoldenTestCase,
 )
 from promptwright.few_shot import ExampleSelector, StaticExampleSelector
+from promptwright.meta import (
+    AIPromptGenerator,
+    GeneratedPromptSpec,
+    generate_prompt_from_task,
+)
 from promptwright.renderers import MarkdownSectionRenderer, PromptRenderer
 from promptwright.sections import ContextBlock, Example, PromptSections
 
@@ -93,4 +98,8 @@ __all__ = [
     "GoldenSet",
     "GoldenTestCase",
     "GoldenSetReport",
+    # Meta-Prompting & AI Prompt Generation (§20)
+    "AIPromptGenerator",
+    "generate_prompt_from_task",
+    "GeneratedPromptSpec",
 ]
