@@ -34,6 +34,22 @@ uv add promptwright
 
 ---
 
+## 📖 Documentation
+
+Comprehensive guides and architectural references are available in the [`docs/`](docs/) directory:
+
+- 🏛️ **[System Architecture & SOLID Design](docs/architecture/overview.md)**
+- 📋 **[PromptBuilder API Reference](docs/core/builder.md)**
+- 📐 **[PromptSections AST & Specification Standard](docs/core/sections.md)**
+- 🛡️ **[Middleware & Anti-Pattern Quality Gate](docs/middleware/overview.md)**
+- ⚡ **[Renderers & Dual-Schema Token Optimization](docs/renderers/overview.md)**
+- 🧩 **[Chain Strategies & LCEL Bridge](docs/chains/strategies.md)**
+- 🎯 **[Use Case Presets: Extraction](docs/presets/extraction.md) & [Classification](docs/presets/classification.md)**
+- 🔍 **[Dynamic Few-Shot Selectors](docs/few-shot/dynamic-selectors.md)**
+- 📊 **[Golden Set Regression Testing](docs/evaluation/regression-runner.md)**
+
+---
+
 ## 🚀 Quickstart
 
 ### 1. The Fluent Builder Pattern
