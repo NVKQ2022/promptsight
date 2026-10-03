@@ -1,4 +1,4 @@
-"""Core PromptBuilder with fluent API and middleware support."""
+"""Core PromptBuilder orchestrating construction, middleware, and rendering (SOLID compliant)."""
 
 from __future__ import annotations
 
@@ -10,7 +10,6 @@ try:
     from langchain_core.prompts import (
         ChatPromptTemplate,
         FewShotChatMessagePromptTemplate,
-        PromptTemplate,
     )
     from langchain_core.runnables import RunnableSequence
 except ImportError as e:  # pragma: no cover
@@ -18,28 +17,43 @@ except ImportError as e:  # pragma: no cover
         "langchain-core is required. Install with: pip install langchain-core"
     ) from e
 
-from promptwright.chain import build_chain
+from promptwright.chain import ChainStrategy, build_chain
 from promptwright.few_shot import format_example_payload
 from promptwright.middleware.base import (
     IssueSeverity,
-    Middleware,
-    MiddlewareType,
+    PipelineComponent,
+    PromptValidator,
+    SectionTransformer,
     ValidationIssue,
-    wrap_middleware,
+    is_transformer,
+    is_validator,
 )
 from promptwright.middleware.validator import AntiPatternValidator
+from promptwright.renderers.base import PromptRenderer
+from promptwright.renderers.markdown import MarkdownSectionRenderer
 from promptwright.sections import ContextBlock, Example, PromptSections
 
 
 class PromptBuilder:
     """Fluent builder for constructing production-grade LangChain prompts.
 
-    Adheres to PromtEngineering.md principles and supports middleware plugins.
+    Adheres to SOLID principles:
+    - Single Responsibility: Orchestrates prompt construction and configuration.
+    - Open/Closed: Extensible via middlewares, validation rules, renderers, and chain strategies.
+    - Liskov Substitution: Works with any compliant renderer or pipeline component.
+    - Interface Segregation: Distinguishes transformers from validators.
+    - Dependency Inversion: Depends on PromptRenderer and ChainStrategy abstractions.
     """
 
-    def __init__(self, sections: Optional[PromptSections] = None) -> None:
+    def __init__(
+        self,
+        sections: Optional[PromptSections] = None,
+        renderer: Optional[PromptRenderer] = None,
+    ) -> None:
         self.sections: PromptSections = sections or PromptSections()
-        self._middlewares: List[Middleware] = [AntiPatternValidator(strict=False)]
+        self.renderer: PromptRenderer = renderer or MarkdownSectionRenderer()
+        self._transformers: List[SectionTransformer] = []
+        self._validators: List[PromptValidator] = [AntiPatternValidator(strict=False)]
         self._user_template: Optional[str] = None
 
     def role(self, role: str) -> "PromptBuilder":
@@ -115,20 +129,62 @@ class PromptBuilder:
         return self
 
     def user_template(self, template: str) -> "PromptBuilder":
-        """Set custom human message template. Defaults to delimited input variables."""
+        """Set custom human message template."""
         self._user_template = template
         return self
 
-    def use(self, middleware: MiddlewareType) -> "PromptBuilder":
-        """Register a middleware plugin (transform, validate, or enrich)."""
-        self._middlewares.append(wrap_middleware(middleware))
+    def with_renderer(self, renderer: PromptRenderer) -> "PromptBuilder":
+        """Inject a custom PromptRenderer implementation (DIP & OCP)."""
+        self.renderer = renderer
+        return self
+
+    def use(self, component: PipelineComponent) -> "PromptBuilder":
+        """Register a transformer, validator, or composite middleware component (ISP)."""
+        added = False
+        if is_transformer(component):
+            self._transformers.append(component)  # type: ignore[arg-type]
+            added = True
+        if is_validator(component):
+            self._validators.append(component)  # type: ignore[arg-type]
+            added = True
+
+        if not added and callable(component):
+            # Wrap standalone function
+            class _FunctionTransformer:
+                def transform(self, s: PromptSections) -> PromptSections:
+                    res = component(s)
+                    return res if isinstance(res, PromptSections) else s
+
+            class _FunctionValidator:
+                def validate(self, s: PromptSections) -> List[ValidationIssue]:
+                    res = component(s)
+                    return res if isinstance(res, list) else []
+
+            # Test invocation to determine capability
+            test_copy = copy.deepcopy(self.sections)
+            try:
+                result = component(test_copy)
+                if isinstance(result, PromptSections):
+                    self._transformers.append(_FunctionTransformer())
+                    added = True
+                elif isinstance(result, list):
+                    self._validators.append(_FunctionValidator())
+                    added = True
+            except Exception:
+                # Default to transformer if cannot determine dynamically
+                self._transformers.append(_FunctionTransformer())
+                added = True
+
+        if not added:
+            raise TypeError(f"Component {type(component)} must implement transform, validate, or be callable.")
+
         return self
 
     def validate(self, strict: bool = False) -> List[ValidationIssue]:
         """Run all registered validation middlewares against current sections."""
         issues: List[ValidationIssue] = []
-        for mw in self._middlewares:
-            issues.extend(mw.validate(self.sections))
+        for val in self._validators:
+            issues.extend(val.validate(self.sections))
 
         if strict:
             errors = [i for i in issues if i.severity == IssueSeverity.ERROR]
@@ -139,25 +195,11 @@ class PromptBuilder:
         return issues
 
     def _apply_transforms(self) -> PromptSections:
-        """Apply all middleware transformations to a copy of sections."""
+        """Apply all transformer middlewares to a copy of sections."""
         working_sections = copy.deepcopy(self.sections)
-        for mw in self._middlewares:
-            working_sections = mw.transform(working_sections)
+        for tf in self._transformers:
+            working_sections = tf.transform(working_sections)
         return working_sections
-
-    def _render_user_message(self, sections: PromptSections) -> str:
-        """Render the human input message."""
-        if self._user_template:
-            return self._user_template
-
-        if not sections.inputs:
-            return "{input}"
-
-        blocks: List[str] = []
-        for var_name in sections.inputs:
-            blocks.append(f"<{var_name}>\n{{{var_name}}}\n</{var_name}>")
-
-        return "\n\n".join(blocks)
 
     def build(
         self,
@@ -166,25 +208,15 @@ class PromptBuilder:
         with_few_shot: bool = True,
         template_format: str = "f-string",
     ) -> ChatPromptTemplate:
-        """Compile the prompt into a LangChain ChatPromptTemplate.
-
-        Args:
-            strict: If True, raises ValueError if any validation error occurs.
-            with_few_shot: If True, appends FewShotChatMessagePromptTemplate if examples exist.
-            template_format: "f-string" (recommended per security guide).
-
-        Returns:
-            LangChain ChatPromptTemplate ready for LCEL.
-        """
+        """Compile the prompt into a LangChain ChatPromptTemplate."""
         # 1. Validate
         self.validate(strict=strict)
 
-        # 2. Transform sections via registered middlewares
+        # 2. Transform sections via registered transformers
         sections = self._apply_transforms()
 
-        # 3. Render system message
-        system_content = sections.render_system_prompt(escape_braces_for_fstring=True)
-
+        # 3. Delegate rendering to injected PromptRenderer (SRP & DIP)
+        system_content = self.renderer.render_system(sections)
         messages: List[Any] = [("system", system_content)]
 
         # 4. Handle Few-Shot examples
@@ -202,8 +234,8 @@ class PromptBuilder:
             )
             messages.append(few_shot)
 
-        # 5. Render human message
-        human_content = self._render_user_message(sections)
+        # 5. Delegate user message rendering to injected PromptRenderer
+        human_content = self.renderer.render_user(sections, self._user_template)
         messages.append(("human", human_content))
 
         return ChatPromptTemplate.from_messages(messages, template_format=template_format)
@@ -212,18 +244,11 @@ class PromptBuilder:
         self,
         llm: Any,
         *,
-        mode: Literal["structured", "pydantic", "json", "raw"] = "structured",
+        mode: Union[str, ChainStrategy] = "structured",
         strict: bool = False,
         with_few_shot: bool = True,
     ) -> RunnableSequence:
-        """Convenience method: compile prompt and bind directly to an LLM chain.
-
-        Args:
-            llm: LangChain Chat Model.
-            mode: 'structured' | 'pydantic' | 'json' | 'raw'.
-            strict: Enforce strict validation.
-            with_few_shot: Include few-shot examples.
-        """
+        """Compile prompt and bind directly to an LLM chain via ChainStrategy (DIP)."""
         prompt = self.build(strict=strict, with_few_shot=with_few_shot)
         return build_chain(
             prompt=prompt,
