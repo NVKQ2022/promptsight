@@ -1,7 +1,8 @@
 import json
-import pytest
-from pydantic import BaseModel
+
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from pydantic import BaseModel
+
 from promptwright import PromptBuilder
 
 
@@ -31,12 +32,7 @@ def test_chain_execution_json_mode():
 
 
 def test_chain_execution_raw_mode():
-    builder = (
-        PromptBuilder()
-        .role("Echo")
-        .task("Echo the input")
-        .inputs(text="Input text")
-    )
+    builder = PromptBuilder().role("Echo").task("Echo the input").inputs(text="Input text")
     fake_llm = FakeListChatModel(responses=["Echo: Hello"])
     chain = builder.to_chain(fake_llm, mode="raw")
     result = chain.invoke({"text": "Hello"})

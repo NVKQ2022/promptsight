@@ -1,4 +1,4 @@
-"""Example: Using an LLM to engineer prompts from user task descriptions (PromtEngineering.md §20)."""
+"""Example: Using an LLM to engineer prompts from user task descriptions (docs/spec.md §20)."""
 
 import json
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
@@ -19,7 +19,7 @@ def main():
     # from langchain_openai import ChatOpenAI
     # llm = ChatOpenAI(model="gpt-4o")
 
-    # Simulated response adhering to PromtEngineering.md §20
+    # Simulated response adhering to docs/spec.md §20
     simulated_ai_response = {
         "role": "Senior Site Reliability Engineer & Incident Investigator",
         "goal": "diagnose production server error logs and extract structured incident data with recommended remediations",

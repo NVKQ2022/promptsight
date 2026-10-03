@@ -1,13 +1,15 @@
 """Tests explicitly validating adherence to SOLID design principles."""
 
-import pytest
 from typing import List, Optional, Type
-from pydantic import BaseModel
+
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda, RunnableSequence
+from pydantic import BaseModel
 
 from promptwright import (
+    AntiPatternValidator,
+    ChainStrategy,
     PromptBuilder,
     PromptRenderer,
     PromptSections,
@@ -15,8 +17,6 @@ from promptwright import (
     SectionTransformer,
     ValidationIssue,
     ValidationRule,
-    AntiPatternValidator,
-    ChainStrategy,
     register_chain_strategy,
 )
 
@@ -43,7 +43,10 @@ def test_custom_renderer_dependency_inversion():
     )
     prompt = builder.build()
     messages = prompt.format_messages(input="test data")
-    assert messages[0].content == "<system><role>Data Processor</role><task>Extract entities</task></system>"
+    assert (
+        messages[0].content
+        == "<system><role>Data Processor</role><task>Extract entities</task></system>"
+    )
     assert messages[1].content == "<user>test data</user>"
 
 
@@ -148,12 +151,7 @@ def test_custom_chain_strategy_open_closed():
     # Register custom strategy
     register_chain_strategy("uppercase", UpperCaseRawChainStrategy())
 
-    builder = (
-        PromptBuilder()
-        .role("Echo")
-        .task("Echo back")
-        .inputs(msg="Message")
-    )
+    builder = PromptBuilder().role("Echo").task("Echo back").inputs(msg="Message")
     fake_llm = FakeListChatModel(responses=["hello world"])
 
     # Test resolution by name

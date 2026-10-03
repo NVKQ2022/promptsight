@@ -26,7 +26,9 @@ class StrictGroundingMiddleware(SectionTransformer):
 
         if not self.allow_guessing:
             no_guess_rule = f"If required information is missing or ambiguous, {self.missing_value_action}. Do not invent or guess facts."
-            if not any("do not invent" in c.lower() or "guess" in c.lower() for c in new_constraints):
+            if not any(
+                "do not invent" in c.lower() or "guess" in c.lower() for c in new_constraints
+            ):
                 new_constraints.append(no_guess_rule)
 
         sections.constraints = new_constraints

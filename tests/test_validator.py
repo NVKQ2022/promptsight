@@ -1,5 +1,6 @@
 import pytest
-from promptwright import PromptBuilder, AntiPatternValidator, IssueSeverity
+
+from promptwright import IssueSeverity, PromptBuilder
 
 
 def test_anti_pattern_vague_verb_detected():
@@ -12,15 +13,14 @@ def test_anti_pattern_vague_verb_detected():
     issues = builder.validate(strict=False)
     vague_issues = [i for i in issues if i.code == "VAGUE_VERB"]
     assert len(vague_issues) >= 1
-    assert "handle" in vague_issues[0].message.lower() or "process" in vague_issues[0].message.lower()
+    assert (
+        "handle" in vague_issues[0].message.lower() or "process" in vague_issues[0].message.lower()
+    )
 
 
 def test_decorative_role_detected():
     builder = (
-        PromptBuilder()
-        .role("an expert")
-        .task("Generate unit tests")
-        .output_format("Python code")
+        PromptBuilder().role("an expert").task("Generate unit tests").output_format("Python code")
     )
     issues = builder.validate(strict=False)
     role_issues = [i for i in issues if i.code == "DECORATIVE_ROLE"]
@@ -28,11 +28,7 @@ def test_decorative_role_detected():
 
 
 def test_missing_task_causes_error_in_strict_mode():
-    builder = (
-        PromptBuilder()
-        .role("Tester")
-        .output_format("JSON")
-    )
+    builder = PromptBuilder().role("Tester").output_format("JSON")
     # validate in non-strict gives ERROR severity
     issues = builder.validate(strict=False)
     error_issues = [i for i in issues if i.severity == IssueSeverity.ERROR]

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from typing import Any, Dict, List, Literal, Type
+
 from pydantic import BaseModel
 
 SchemaMode = Literal["full", "concise", "tools_only"]
@@ -15,9 +16,7 @@ def generate_concise_schema_description(model: Type[BaseModel]) -> str:
     properties: Dict[str, Any] = schema.get("properties", {})
     required: List[str] = schema.get("required", [])
 
-    lines: List[str] = [
-        "Return ONLY a JSON object containing the following fields:"
-    ]
+    lines: List[str] = ["Return ONLY a JSON object containing the following fields:"]
 
     for field_name, field_info in properties.items():
         field_type = field_info.get("type")

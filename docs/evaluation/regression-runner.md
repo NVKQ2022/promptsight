@@ -1,6 +1,6 @@
 # Golden Set Evaluation & Regression Testing
 
-The evaluation module ([`src/promptwright/eval/`](../../src/promptwright/eval/)) directly implements **[PromtEngineering.md §17 (Prompt Testing and Evaluation)](../../PromtEngineering.md#17-prompt-testing-and-evaluation)**. It treats prompts as versioned code artifacts and automates regression benchmarking.
+The evaluation module ([`src/promptwright/eval/`](../../src/promptwright/eval/)) directly implements **[Prompt Engineering Specification §17](../spec.md#17-prompt-testing-and-evaluation)**. It treats prompts as versioned code artifacts and automates regression benchmarking.
 
 ---
 

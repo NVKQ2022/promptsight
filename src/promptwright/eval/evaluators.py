@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, Type, runtime_checkable
+
 from pydantic import BaseModel
 
 from promptwright.eval.models import GoldenTestCase
@@ -12,7 +13,9 @@ from promptwright.eval.models import GoldenTestCase
 class Evaluator(Protocol):
     """Protocol for evaluating prompt output against test criteria."""
 
-    def evaluate(self, case: GoldenTestCase, actual_output: Any) -> Tuple[bool, float, Dict[str, Any]]:
+    def evaluate(
+        self, case: GoldenTestCase, actual_output: Any
+    ) -> Tuple[bool, float, Dict[str, Any]]:
         """Return (passed, score_0_to_1, details_dict)."""
         ...
 
@@ -23,7 +26,9 @@ class SchemaComplianceEvaluator(Evaluator):
     def __init__(self, schema: Optional[Type[BaseModel]] = None):
         self.schema = schema
 
-    def evaluate(self, case: GoldenTestCase, actual_output: Any) -> Tuple[bool, float, Dict[str, Any]]:
+    def evaluate(
+        self, case: GoldenTestCase, actual_output: Any
+    ) -> Tuple[bool, float, Dict[str, Any]]:
         if actual_output is None:
             return False, 0.0, {"reason": "Output is None"}
 
@@ -51,7 +56,9 @@ class FieldMatchEvaluator(Evaluator):
         self.key_fields = key_fields
         self.case_sensitive = case_sensitive
 
-    def evaluate(self, case: GoldenTestCase, actual_output: Any) -> Tuple[bool, float, Dict[str, Any]]:
+    def evaluate(
+        self, case: GoldenTestCase, actual_output: Any
+    ) -> Tuple[bool, float, Dict[str, Any]]:
         if not case.expected_output:
             return True, 1.0, {"note": "No expected_output defined"}
 
@@ -92,8 +99,12 @@ class FieldMatchEvaluator(Evaluator):
                 mismatches[k] = {"expected": exp_v, "actual": act_v}
 
         score = matches / len(target_keys) if target_keys else 1.0
-        passed = (score == 1.0)
-        return passed, score, {"matches": matches, "total": len(target_keys), "mismatches": mismatches}
+        passed = score == 1.0
+        return (
+            passed,
+            score,
+            {"matches": matches, "total": len(target_keys), "mismatches": mismatches},
+        )
 
 
 class CustomFunctionEvaluator(Evaluator):
@@ -102,5 +113,7 @@ class CustomFunctionEvaluator(Evaluator):
     def __init__(self, fn: Callable[[GoldenTestCase, Any], Tuple[bool, float, Dict[str, Any]]]):
         self.fn = fn
 
-    def evaluate(self, case: GoldenTestCase, actual_output: Any) -> Tuple[bool, float, Dict[str, Any]]:
+    def evaluate(
+        self, case: GoldenTestCase, actual_output: Any
+    ) -> Tuple[bool, float, Dict[str, Any]]:
         return self.fn(case, actual_output)

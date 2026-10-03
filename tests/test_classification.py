@@ -1,5 +1,4 @@
-import pytest
-from promptwright import create_classification_prompt, DefaultClassificationResult
+from promptwright import create_classification_prompt
 
 
 def test_classification_preset_builds_valid_prompt():
@@ -15,7 +14,10 @@ def test_classification_preset_builds_valid_prompt():
     messages = prompt.format_messages(ticket_content="My payment failed with error 402.")
 
     system_content = messages[0].content
-    assert "Support ticket Classification Specialist" in system_content or "Support Ticket" in system_content
+    assert (
+        "Support ticket Classification Specialist" in system_content
+        or "Support Ticket" in system_content
+    )
     assert "`billing`" in system_content
     assert "`technical_support`" in system_content
     assert "Do not invent new categories" in system_content

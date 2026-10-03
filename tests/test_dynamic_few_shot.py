@@ -1,7 +1,6 @@
 """Tests for dynamic few-shot example selection (Challenge 2)."""
 
-import pytest
-from promptwright import PromptBuilder, ExampleSelector, StaticExampleSelector
+from promptwright import ExampleSelector, PromptBuilder
 
 
 class QueryMatchingSelector(ExampleSelector):

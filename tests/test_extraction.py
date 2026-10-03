@@ -1,6 +1,7 @@
-import pytest
 from typing import List, Optional
+
 from pydantic import BaseModel, Field
+
 from promptwright import create_extraction_prompt
 
 

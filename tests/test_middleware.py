@@ -1,10 +1,8 @@
-import pytest
 from promptwright import (
-    PromptBuilder,
-    StrictGroundingMiddleware,
-    AutoDelimiterMiddleware,
     BaseMiddleware,
+    PromptBuilder,
     PromptSections,
+    StrictGroundingMiddleware,
 )
 
 

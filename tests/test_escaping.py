@@ -1,6 +1,5 @@
 """Tests for intelligent f-string template brace escaping (Challenge 3)."""
 
-import pytest
 from promptwright import PromptBuilder
 from promptwright.utils.escaping import escape_fstring_braces
 

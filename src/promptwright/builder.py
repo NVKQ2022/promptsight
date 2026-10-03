@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import copy
-from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Type, Union
+from typing import Any, List, Literal, Optional, Type, Union
+
 from pydantic import BaseModel
 
 try:
@@ -13,9 +14,7 @@ try:
     )
     from langchain_core.runnables import RunnableSequence
 except ImportError as e:  # pragma: no cover
-    raise ImportError(
-        "langchain-core is required. Install with: pip install langchain-core"
-    ) from e
+    raise ImportError("langchain-core is required. Install with: pip install langchain-core") from e
 
 from promptwright.chain import ChainStrategy, build_chain
 from promptwright.few_shot import format_example_payload
@@ -166,6 +165,40 @@ class PromptBuilder:
         self.renderer = renderer
         return self
 
+    def use_transformer(self, transformer: PipelineComponent) -> "PromptBuilder":
+        """Register an explicit transformer component or callable (PromptSections -> PromptSections)."""
+        if is_transformer(transformer):
+            self._transformers.append(transformer)  # type: ignore[arg-type]
+        elif callable(transformer):
+
+            class _FunctionTransformer:
+                def transform(self, s: PromptSections) -> PromptSections:
+                    res = transformer(s)
+                    return res if isinstance(res, PromptSections) else s
+
+            self._transformers.append(_FunctionTransformer())
+        else:
+            raise TypeError(
+                f"Component {type(transformer)} must implement transform or be callable."
+            )
+        return self
+
+    def use_validator(self, validator: PipelineComponent) -> "PromptBuilder":
+        """Register an explicit validator component or callable (PromptSections -> List[ValidationIssue])."""
+        if is_validator(validator):
+            self._validators.append(validator)  # type: ignore[arg-type]
+        elif callable(validator):
+
+            class _FunctionValidator:
+                def validate(self, s: PromptSections) -> List[ValidationIssue]:
+                    res = validator(s)
+                    return res if isinstance(res, list) else []
+
+            self._validators.append(_FunctionValidator())
+        else:
+            raise TypeError(f"Component {type(validator)} must implement validate or be callable.")
+        return self
+
     def use(self, component: PipelineComponent) -> "PromptBuilder":
         """Register a transformer, validator, or composite middleware component (ISP)."""
         added = False
@@ -177,34 +210,23 @@ class PromptBuilder:
             added = True
 
         if not added and callable(component):
-            # Wrap standalone function
-            class _FunctionTransformer:
-                def transform(self, s: PromptSections) -> PromptSections:
-                    res = component(s)
-                    return res if isinstance(res, PromptSections) else s
-
-            class _FunctionValidator:
-                def validate(self, s: PromptSections) -> List[ValidationIssue]:
-                    res = component(s)
-                    return res if isinstance(res, list) else []
-
-            # Test invocation to determine capability
-            test_copy = copy.deepcopy(self.sections)
+            # Check return type annotation if available without executing user code at registration
             try:
-                result = component(test_copy)
-                if isinstance(result, PromptSections):
-                    self._transformers.append(_FunctionTransformer())
-                    added = True
-                elif isinstance(result, list):
-                    self._validators.append(_FunctionValidator())
-                    added = True
-            except Exception:
-                # Default to transformer if cannot determine dynamically
-                self._transformers.append(_FunctionTransformer())
-                added = True
+                import inspect
+
+                sig = inspect.signature(component)
+                ret = sig.return_annotation
+                ret_str = str(ret).lower() if ret is not inspect.Signature.empty else ""
+                if "list" in ret_str or "validationissue" in ret_str:
+                    return self.use_validator(component)
+            except (ValueError, TypeError):
+                pass
+            return self.use_transformer(component)
 
         if not added:
-            raise TypeError(f"Component {type(component)} must implement transform, validate, or be callable.")
+            raise TypeError(
+                f"Component {type(component)} must implement transform, validate, or be callable."
+            )
 
         return self
 
@@ -218,7 +240,9 @@ class PromptBuilder:
             errors = [i for i in issues if i.severity == IssueSeverity.ERROR]
             if errors:
                 error_msgs = "\n".join(f"- {str(e)}" for e in errors)
-                raise ValueError(f"Prompt validation failed with {len(errors)} error(s):\n{error_msgs}")
+                raise ValueError(
+                    f"Prompt validation failed with {len(errors)} error(s):\n{error_msgs}"
+                )
 
         return issues
 
@@ -228,6 +252,16 @@ class PromptBuilder:
         for tf in self._transformers:
             working_sections = tf.transform(working_sections)
         return working_sections
+
+    def render_system(self) -> str:
+        """Render the system prompt string directly without compiling to ChatPromptTemplate."""
+        sections = self._apply_transforms()
+        return self.renderer.render_system(sections)
+
+    def render_user(self, custom_template: Optional[str] = None) -> str:
+        """Render the user prompt string directly without compiling to ChatPromptTemplate."""
+        sections = self._apply_transforms()
+        return self.renderer.render_user(sections, custom_template or self._user_template)
 
     def build(
         self,
@@ -256,6 +290,7 @@ class PromptBuilder:
 
             if sections.example_selector is not None:
                 from promptwright.few_shot import ensure_base_example_selector
+
                 few_shot = FewShotChatMessagePromptTemplate(
                     example_selector=ensure_base_example_selector(sections.example_selector),
                     example_prompt=ex_prompt,
@@ -263,8 +298,7 @@ class PromptBuilder:
                 messages.append(few_shot)
             elif sections.examples:
                 examples_payload = [
-                    {"input": ex.input_text, "output": ex.output_text}
-                    for ex in sections.examples
+                    {"input": ex.input_text, "output": ex.output_text} for ex in sections.examples
                 ]
                 few_shot = FewShotChatMessagePromptTemplate(
                     examples=examples_payload,

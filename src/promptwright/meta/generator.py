@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any, Optional
+
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from promptwright.meta.models import GeneratedPromptSpec
 from promptwright.meta.prompts import META_PROMPT_SYSTEM, META_PROMPT_USER_TEMPLATE
+
+logger = logging.getLogger(__name__)
 
 
 class AIPromptGenerator:
@@ -59,15 +63,20 @@ class AIPromptGenerator:
                 )
                 if isinstance(result, GeneratedPromptSpec):
                     return result
-            except Exception:
-                # Fallback to PydanticOutputParser if provider tool-calling fails
-                pass
+            except (NotImplementedError, AttributeError, ValueError) as exc:
+                logger.info(
+                    "Native structured output not supported or failed (%s); falling back to PydanticOutputParser.",
+                    exc,
+                )
+            except Exception as exc:
+                logger.warning(
+                    "Unexpected error during structured output (%s); attempting fallback parser.",
+                    exc,
+                )
 
         # Strategy 2: Prompt + PydanticOutputParser
         chain = self.prompt_template | self.llm | self.parser
-        return chain.invoke(
-            {"user_task": user_task, "additional_context_block": ctx_block}
-        )
+        return chain.invoke({"user_task": user_task, "additional_context_block": ctx_block})
 
 
 def generate_prompt_from_task(

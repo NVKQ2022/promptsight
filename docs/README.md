@@ -1,6 +1,6 @@
 # 📚 PromptWright Documentation
 
-Welcome to the **PromptWright** documentation. PromptWright is a production-grade, opinionated prompt engineering framework built on top of LangChain. It translates the rules of rigorous prompt engineering ([PromtEngineering.md](../PromtEngineering.md)) into clean, reusable Python code.
+Welcome to the **PromptWright** documentation. PromptWright is a production-grade, opinionated prompt engineering framework built on top of LangChain. It translates the rules of rigorous prompt engineering ([spec.md](spec.md)) into clean, reusable Python code.
 
 ---
 

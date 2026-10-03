@@ -1,6 +1,6 @@
 # System Architecture & SOLID Design
 
-PromptWright is engineered as a modular, extensible framework built on top of `langchain-core` and `pydantic`. It enforces the 22-section engineering specification ([`PromtEngineering.md`](../../PromtEngineering.md)) while maintaining a clean, decoupled Python architecture.
+PromptWright is engineered as a modular, extensible framework built on top of `langchain-core` and `pydantic`. It enforces the 22-section engineering specification ([`docs/spec.md`](../spec.md)) while maintaining a clean, decoupled Python architecture.
 
 ---
 

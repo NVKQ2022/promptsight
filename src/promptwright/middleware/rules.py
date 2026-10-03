@@ -33,8 +33,7 @@ DECORATIVE_ROLES = {
 class ValidationRule(Protocol):
     """Protocol for single-responsibility validation rules (OCP)."""
 
-    def evaluate(self, sections: PromptSections) -> List[ValidationIssue]:
-        ...
+    def evaluate(self, sections: PromptSections) -> List[ValidationIssue]: ...
 
 
 class RoleAndGoalRule:

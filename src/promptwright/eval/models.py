@@ -6,12 +6,12 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-from pydantic import BaseModel
 
 
 @dataclass
 class GoldenTestCase:
     """A single representative test case for prompt evaluation."""
+
     id: str
     input_variables: Dict[str, Any]
     expected_output: Optional[Any] = None
@@ -23,6 +23,7 @@ class GoldenTestCase:
 @dataclass
 class GoldenSet:
     """Collection of versioned golden test cases."""
+
     name: str = "default_golden_set"
     cases: List[GoldenTestCase] = field(default_factory=list)
 
@@ -33,10 +34,7 @@ class GoldenSet:
             case_id = item.get("id") or f"case_{idx:03d}"
             # Support inputs inside "input" or "input_variables" or "inputs"
             input_vars = (
-                item.get("input_variables")
-                or item.get("inputs")
-                or item.get("input")
-                or {}
+                item.get("input_variables") or item.get("inputs") or item.get("input") or {}
             )
             if not isinstance(input_vars, dict):
                 input_vars = {"input": input_vars}
@@ -64,6 +62,7 @@ class GoldenSet:
         content = path.read_text(encoding="utf-8")
         if path.suffix in (".yaml", ".yml"):
             import yaml  # type: ignore[import-untyped]
+
             data = yaml.safe_load(content)
         else:
             data = json.loads(content)
@@ -78,6 +77,7 @@ class GoldenSet:
 @dataclass
 class EvaluationResult:
     """Result of running a single GoldenTestCase against a chain."""
+
     case_id: str
     passed: bool
     score: float  # 0.0 to 1.0
@@ -90,6 +90,7 @@ class EvaluationResult:
 @dataclass
 class GoldenSetReport:
     """Aggregated evaluation and regression report."""
+
     name: str
     total_cases: int
     passed_cases: int
@@ -118,6 +119,8 @@ class GoldenSetReport:
             err = r.error or "-"
             if len(err) > 50:
                 err = err[:47] + "..."
-            lines.append(f"| `{r.case_id}` | {st} | {r.score:.2f} | {r.latency_ms:.0f} ms | {err} |")
+            lines.append(
+                f"| `{r.case_id}` | {st} | {r.score:.2f} | {r.latency_ms:.0f} ms | {err} |"
+            )
 
         return "\n".join(lines)

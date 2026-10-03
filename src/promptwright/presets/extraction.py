@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Optional, Type
+
 from pydantic import BaseModel
 
 from promptwright.builder import PromptBuilder
@@ -31,13 +32,15 @@ def create_extraction_prompt(
     builder = (
         PromptBuilder()
         .role(role or f"Senior {domain.capitalize()} Information Extraction Specialist")
-        .goal(f"extract accurate structured information from the provided {domain} strictly matching the required schema")
+        .goal(
+            f"extract accurate structured information from the provided {domain} strictly matching the required schema"
+        )
         .inputs(**{input_variable: f"Raw {domain} text to extract data from"})
         .task(
             f"Step 1: Read the delimited <{input_variable}> thoroughly.",
-            f"Step 2: Identify and extract all entities and fields matching the output schema.",
-            f"Step 3: Normalize data types (dates, numbers, strings) per schema specifications.",
-            f"Step 4: Verify all extracted values are explicitly supported by the text.",
+            "Step 2: Identify and extract all entities and fields matching the output schema.",
+            "Step 3: Normalize data types (dates, numbers, strings) per schema specifications.",
+            "Step 4: Verify all extracted values are explicitly supported by the text.",
         )
         .constraints(
             f"Extract only information directly present in the <{input_variable}>.",

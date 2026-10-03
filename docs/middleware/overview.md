@@ -54,7 +54,7 @@ builder.build(strict=True)
 ## 🔒 Built-in Transformers
 
 ### 1. `StrictGroundingMiddleware`
-Implements [PromtEngineering.md §14](../../PromtEngineering.md#14-handling-ambiguity-and-missing-information):
+Implements [Prompt Engineering Specification §14](../spec.md#14-handling-ambiguity-and-missing-information):
 - Automatically injects non-hallucination constraints:
   *"Use only information directly supported by the provided context."*
 - Handles missing data explicitly:
@@ -68,7 +68,7 @@ builder.use(StrictGroundingMiddleware(allow_guessing=False))
 ```
 
 ### 2. `AutoDelimiterMiddleware`
-Implements [PromtEngineering.md §10](../../PromtEngineering.md#10-delimit-inputs):
+Implements [Prompt Engineering Specification §10](../spec.md#10-delimit-inputs):
 - Automatically verifies and wraps context in appropriate tags (`<context>`, `<document>`).
 - Appends prompt-injection guardrails instructing the model to treat content strictly as passive data.
 

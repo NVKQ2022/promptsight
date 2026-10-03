@@ -1,6 +1,6 @@
 # AI Prompt Generator (Meta-Prompting)
 
-The AI prompt generation module ([`src/promptwright/meta/`](../../src/promptwright/meta/)) implements **[PromtEngineering.md §20 (Meta-Prompt for an AI Agent)](../../PromtEngineering.md#20-meta-prompt-for-an-ai-agent)**. It uses a LangChain LLM to design production-quality prompts from raw user task descriptions.
+The AI prompt generation module ([`src/promptwright/meta/`](../../src/promptwright/meta/)) implements **[Prompt Engineering Specification §20](../spec.md#20-meta-prompt-for-an-ai-agent)**. It uses a LangChain LLM to design production-quality prompts from raw user task descriptions.
 
 ---
 

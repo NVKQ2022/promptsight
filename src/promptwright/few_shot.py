@@ -3,16 +3,16 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
+from typing import Any, Dict, List, Protocol, runtime_checkable
+
 from pydantic import BaseModel
 
 try:
     from langchain_core.example_selectors.base import BaseExampleSelector
 except ImportError:  # pragma: no cover
+
     class BaseExampleSelector:  # type: ignore[no-redef]
         pass
-
-from promptwright.sections import Example
 
 
 @runtime_checkable
@@ -31,7 +31,9 @@ class ExampleSelectorAdapter(BaseExampleSelector):
         self.selector = selector
 
     def add_example(self, example: Dict[str, str]) -> Any:
-        if hasattr(self.selector, "add_example") and callable(getattr(self.selector, "add_example")):
+        if hasattr(self.selector, "add_example") and callable(
+            getattr(self.selector, "add_example")
+        ):
             return self.selector.add_example(example)
         return None
 

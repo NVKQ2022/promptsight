@@ -1,15 +1,15 @@
 """Tests for Golden Set evaluation and regression testing framework (Challenge 4)."""
 
 import json
-import pytest
-from pydantic import BaseModel
+
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from pydantic import BaseModel
 
 from promptwright import (
-    PromptBuilder,
     GoldenSet,
     GoldenSetRunner,
     GoldenTestCase,
+    PromptBuilder,
 )
 
 

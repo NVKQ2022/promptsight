@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Literal, Optional, Protocol, Type, Union, runtime_checkable
+from typing import Any, Dict, Optional, Protocol, Type, Union, runtime_checkable
+
 from pydantic import BaseModel
 
 try:
-    from langchain_core.output_parsers import JsonOutputParser, PydanticOutputParser, StrOutputParser
+    from langchain_core.output_parsers import (
+        JsonOutputParser,
+        PydanticOutputParser,
+        StrOutputParser,
+    )
     from langchain_core.prompts import ChatPromptTemplate
     from langchain_core.runnables import RunnableSequence
 except ImportError as e:  # pragma: no cover
@@ -24,8 +29,7 @@ class ChainStrategy(Protocol):
         prompt: ChatPromptTemplate,
         llm: Any,
         schema: Optional[Type[BaseModel]] = None,
-    ) -> RunnableSequence:
-        ...
+    ) -> RunnableSequence: ...
 
 
 class StructuredChainStrategy:

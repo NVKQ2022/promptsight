@@ -250,7 +250,7 @@ builder = (
 
 ---
 
-## 📊 Golden Set Regression Testing (PromtEngineering.md §17)
+## 📊 Golden Set Regression Testing ([Specification](docs/spec.md) §17)
 
 Treat prompts as versioned code with automated regression benchmarking:
 

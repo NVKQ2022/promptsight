@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import List, Optional, Type
+
 from pydantic import BaseModel, Field
 
 from promptwright.builder import PromptBuilder
@@ -10,6 +11,7 @@ from promptwright.builder import PromptBuilder
 
 class DefaultClassificationResult(BaseModel):
     """Standard classification result with reasoning and evidence."""
+
     category: str = Field(description="The chosen category from the allowed taxonomy")
     reasoning: str = Field(description="1-2 sentences justifying the classification")
     evidence_span: Optional[str] = Field(

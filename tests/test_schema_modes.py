@@ -1,7 +1,7 @@
 """Tests for schema optimization modes (Challenge 1: Dual-Schema Token Waste)."""
 
-import pytest
 from pydantic import BaseModel, Field
+
 from promptwright import PromptBuilder
 
 
@@ -14,10 +14,7 @@ class ComplexDocument(BaseModel):
 
 def test_schema_mode_full():
     builder = (
-        PromptBuilder()
-        .role("Parser")
-        .task("Parse doc")
-        .output_schema(ComplexDocument, mode="full")
+        PromptBuilder().role("Parser").task("Parse doc").output_schema(ComplexDocument, mode="full")
     )
     prompt = builder.build()
     system_text = prompt.messages[0].prompt.template

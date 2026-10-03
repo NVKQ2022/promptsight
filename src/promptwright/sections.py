@@ -4,12 +4,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Type
+
 from pydantic import BaseModel
 
 
 @dataclass
 class Example:
     """Few-shot example representation."""
+
     input_text: str
     output_text: str
     description: Optional[str] = None
@@ -18,6 +20,7 @@ class Example:
 @dataclass
 class ContextBlock:
     """Delimited context block (PromtEngineering.md §5, §10)."""
+
     name: str
     content: str
     tag: str = "context"
@@ -27,6 +30,7 @@ class ContextBlock:
 @dataclass
 class PromptSections:
     """Pure data model representing the engineered sections of a prompt (SRP)."""
+
     role: Optional[str] = None
     goal: Optional[str] = None
     context_blocks: List[ContextBlock] = field(default_factory=list)
@@ -44,4 +48,7 @@ class PromptSections:
     def render_system_prompt(self, escape_braces_for_fstring: bool = True) -> str:
         """Backward-compatibility proxy delegating to MarkdownSectionRenderer."""
         from promptwright.renderers.markdown import MarkdownSectionRenderer
-        return MarkdownSectionRenderer(escape_braces_for_fstring=escape_braces_for_fstring).render_system(self)
+
+        return MarkdownSectionRenderer(
+            escape_braces_for_fstring=escape_braces_for_fstring
+        ).render_system(self)

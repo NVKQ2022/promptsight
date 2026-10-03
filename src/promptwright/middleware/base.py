@@ -41,21 +41,20 @@ class ValidationIssue:
 class SectionTransformer(Protocol):
     """ISP: Interface dedicated strictly to section transformation."""
 
-    def transform(self, sections: PromptSections) -> PromptSections:
-        ...
+    def transform(self, sections: PromptSections) -> PromptSections: ...
 
 
 @runtime_checkable
 class PromptValidator(Protocol):
     """ISP: Interface dedicated strictly to prompt validation."""
 
-    def validate(self, sections: PromptSections) -> List[ValidationIssue]:
-        ...
+    def validate(self, sections: PromptSections) -> List[ValidationIssue]: ...
 
 
 @runtime_checkable
 class Middleware(SectionTransformer, PromptValidator, Protocol):
     """Composite interface for components that both transform and validate."""
+
     ...
 
 

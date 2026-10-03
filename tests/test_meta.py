@@ -1,11 +1,10 @@
-"""Tests for AI Prompt Generation / Meta-Prompting (PromtEngineering.md §20)."""
+"""Tests for AI Prompt Generation / Meta-Prompting (docs/spec.md §20)."""
 
 import json
-import pytest
+
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 
 from promptwright import (
-    AIPromptGenerator,
     GeneratedPromptSpec,
     generate_prompt_from_task,
 )
