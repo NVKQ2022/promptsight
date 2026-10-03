@@ -1,12 +1,12 @@
 # PromptSections AST & Specification Order
 
-The `PromptSections` dataclass ([`src/promptwright/sections.py`](../../src/promptwright/sections.py)) is the Abstract Syntax Tree (AST) representing an engineered prompt. It models the canonical section sequence defined in [Prompt Engineering Specification §4](../spec.md#4-prompt-construction-standard).
+The `PromptSections` dataclass ([`src/promptsight/sections.py`](../../src/promptsight/sections.py)) is the Abstract Syntax Tree (AST) representing an engineered prompt. It models the canonical section sequence defined in [Prompt Engineering Specification §4](../spec.md#4-prompt-construction-standard).
 
 ---
 
 ## 📐 Canonical Section Ordering
 
-PromptWright renders sections in the exact order proven to maximize LLM compliance:
+PromptSight renders sections in the exact order proven to maximize LLM compliance:
 
 | Order | Heading | Purpose | Spec Reference |
 |---|---|---|---|

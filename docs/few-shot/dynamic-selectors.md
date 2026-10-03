@@ -1,12 +1,12 @@
 # Few-Shot Learning & Dynamic Example Selectors
 
-PromptWright provides first-class support for both in-memory few-shot examples and runtime retrieval-augmented few-shot selection ([`src/promptwright/few_shot.py`](../../src/promptwright/few_shot.py)).
+PromptSight provides first-class support for both in-memory few-shot examples and runtime retrieval-augmented few-shot selection ([`src/promptsight/few_shot.py`](../../src/promptsight/few_shot.py)).
 
 ---
 
 ## 📌 Static Examples
 
-For standard few-shot prompting, add examples directly to the builder. PromptWright automatically normalizes Pydantic models, dictionaries, or strings into JSON:
+For standard few-shot prompting, add examples directly to the builder. PromptSight automatically normalizes Pydantic models, dictionaries, or strings into JSON:
 
 ```python
 builder = (
@@ -36,7 +36,7 @@ When managing hundreds of labeled examples, hardcoding all of them into the prom
 from langchain_chroma import Chroma
 from langchain_core.example_selectors import SemanticSimilarityExampleSelector
 from langchain_openai import OpenAIEmbeddings
-from promptwright import PromptBuilder
+from promptsight import PromptBuilder
 
 # 1. Example repository
 example_bank = [

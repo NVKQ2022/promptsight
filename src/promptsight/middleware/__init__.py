@@ -1,6 +1,6 @@
-"""Middleware module for promptwright."""
+"""Middleware module for promptsight."""
 
-from promptwright.middleware.base import (
+from promptsight.middleware.base import (
     BaseMiddleware,
     IssueSeverity,
     Middleware,
@@ -11,9 +11,9 @@ from promptwright.middleware.base import (
     is_transformer,
     is_validator,
 )
-from promptwright.middleware.delimiters import AutoDelimiterMiddleware
-from promptwright.middleware.grounding import StrictGroundingMiddleware
-from promptwright.middleware.rules import (
+from promptsight.middleware.delimiters import AutoDelimiterMiddleware
+from promptsight.middleware.grounding import StrictGroundingMiddleware
+from promptsight.middleware.rules import (
     ConstraintsStyleRule,
     OutputFormatRule,
     RoleAndGoalRule,
@@ -21,7 +21,7 @@ from promptwright.middleware.rules import (
     ValidationRule,
     VerificationChecklistRule,
 )
-from promptwright.middleware.validator import AntiPatternValidator
+from promptsight.middleware.validator import AntiPatternValidator
 
 __all__ = [
     "Middleware",

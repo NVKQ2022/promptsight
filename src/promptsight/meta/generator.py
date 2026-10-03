@@ -8,8 +8,8 @@ from typing import Any, Optional
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
-from promptwright.meta.models import GeneratedPromptSpec
-from promptwright.meta.prompts import META_PROMPT_SYSTEM, META_PROMPT_USER_TEMPLATE
+from promptsight.meta.models import GeneratedPromptSpec
+from promptsight.meta.prompts import META_PROMPT_SYSTEM, META_PROMPT_USER_TEMPLATE
 
 logger = logging.getLogger(__name__)
 

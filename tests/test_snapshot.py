@@ -1,6 +1,6 @@
 """Snapshot and determinism tests verifying rendered prompt outputs."""
 
-from promptwright import PromptBuilder, ValidationIssue
+from promptsight import PromptBuilder, ValidationIssue
 
 
 def test_rendered_prompt_determinism_multiple_delimiters():

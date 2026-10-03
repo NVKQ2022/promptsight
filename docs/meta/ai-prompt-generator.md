@@ -1,12 +1,12 @@
 # AI Prompt Generator (Meta-Prompting)
 
-The AI prompt generation module ([`src/promptwright/meta/`](../../src/promptwright/meta/)) implements **[Prompt Engineering Specification §20](../spec.md#20-meta-prompt-for-an-ai-agent)**. It uses a LangChain LLM to design production-quality prompts from raw user task descriptions.
+The AI prompt generation module ([`src/promptsight/meta/`](../../src/promptsight/meta/)) implements **[Prompt Engineering Specification §20](../spec.md#20-meta-prompt-for-an-ai-agent)**. It uses a LangChain LLM to design production-quality prompts from raw user task descriptions.
 
 ---
 
 ## 🎯 What It Does
 
-Instead of writing prompts manually from scratch, developers can supply a natural language goal. PromptWright's meta-prompting engine:
+Instead of writing prompts manually from scratch, developers can supply a natural language goal. PromptSight's meta-prompting engine:
 1. Assigns a specific domain role (rejecting generic roles like *"an expert"*).
 2. Decomposes tasks into numbered steps with precise action verbs (rejecting vague verbs like *"handle"* or *"process"*).
 3. Defines explicit constraints and safe fallbacks for missing/ambiguous data (`null` / `"unresolved"`).
@@ -19,7 +19,7 @@ Instead of writing prompts manually from scratch, developers can supply a natura
 
 ```python
 from langchain_openai import ChatOpenAI
-from promptwright import generate_prompt_from_task
+from promptsight import generate_prompt_from_task
 
 llm = ChatOpenAI(model="gpt-4o")
 

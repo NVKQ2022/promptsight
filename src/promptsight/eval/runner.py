@@ -5,8 +5,8 @@ from __future__ import annotations
 import time
 from typing import Any, List, Optional
 
-from promptwright.eval.evaluators import Evaluator, FieldMatchEvaluator, SchemaComplianceEvaluator
-from promptwright.eval.models import EvaluationResult, GoldenSet, GoldenSetReport, GoldenTestCase
+from promptsight.eval.evaluators import Evaluator, FieldMatchEvaluator, SchemaComplianceEvaluator
+from promptsight.eval.models import EvaluationResult, GoldenSet, GoldenSetReport, GoldenTestCase
 
 
 class GoldenSetRunner:

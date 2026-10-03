@@ -4,11 +4,11 @@ import json
 
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 
-from promptwright import (
+from promptsight import (
     GeneratedPromptSpec,
     generate_prompt_from_task,
 )
-from promptwright.meta.models import GeneratedExample
+from promptsight.meta.models import GeneratedExample
 
 
 def test_generated_prompt_spec_to_builder_and_markdown():

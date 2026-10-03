@@ -1,11 +1,11 @@
-"""Example: Structured Data Extraction using promptwright."""
+"""Example: Structured Data Extraction using promptsight."""
 
 import json
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
-from promptwright import create_extraction_prompt
+from promptsight import create_extraction_prompt
 
 
 # 1. Define the target schema

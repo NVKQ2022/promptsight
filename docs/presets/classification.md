@@ -1,6 +1,6 @@
 # Use Case Preset: Classification & Intent Routing
 
-The classification preset ([`src/promptwright/presets/classification.py`](../../src/promptwright/presets/classification.py)) creates prompts for text classification, intent routing, and categorization with strict taxonomy enforcement.
+The classification preset ([`src/promptsight/presets/classification.py`](../../src/promptsight/presets/classification.py)) creates prompts for text classification, intent routing, and categorization with strict taxonomy enforcement.
 
 ---
 
@@ -39,7 +39,7 @@ class DefaultClassificationResult(BaseModel):
 ## 💻 Complete Example
 
 ```python
-from promptwright import create_classification_prompt
+from promptsight import create_classification_prompt
 
 categories = [
     "bug_report",

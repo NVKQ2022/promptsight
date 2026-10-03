@@ -1,6 +1,6 @@
 # PromptBuilder API Reference
 
-The `PromptBuilder` class ([`src/promptwright/builder.py`](../../src/promptwright/builder.py)) provides a fluent builder pattern for authoring production-grade LangChain prompts.
+The `PromptBuilder` class ([`src/promptsight/builder.py`](../../src/promptsight/builder.py)) provides a fluent builder pattern for authoring production-grade LangChain prompts.
 
 ---
 
@@ -65,7 +65,7 @@ The `PromptBuilder` class ([`src/promptwright/builder.py`](../../src/promptwrigh
 
 ```python
 from pydantic import BaseModel, Field
-from promptwright import PromptBuilder
+from promptsight import PromptBuilder
 
 class RiskAssessment(BaseModel):
     risk_level: str = Field(description="low, medium, high, critical")

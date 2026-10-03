@@ -6,8 +6,8 @@ from typing import Optional, Type
 
 from pydantic import BaseModel
 
-from promptwright.builder import PromptBuilder
-from promptwright.middleware.grounding import StrictGroundingMiddleware
+from promptsight.builder import PromptBuilder
+from promptsight.middleware.grounding import StrictGroundingMiddleware
 
 
 def create_extraction_prompt(

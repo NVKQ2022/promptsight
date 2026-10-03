@@ -6,7 +6,7 @@ from typing import List, Optional, Type
 
 from pydantic import BaseModel, Field
 
-from promptwright.builder import PromptBuilder
+from promptsight.builder import PromptBuilder
 
 
 class DefaultClassificationResult(BaseModel):

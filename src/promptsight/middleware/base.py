@@ -1,4 +1,4 @@
-"""Base definitions and segregated protocols for promptwright middleware (ISP & LSP)."""
+"""Base definitions and segregated protocols for promptsight middleware (ISP & LSP)."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from typing import (
     runtime_checkable,
 )
 
-from promptwright.sections import PromptSections
+from promptsight.sections import PromptSections
 
 
 class IssueSeverity(str, Enum):

@@ -3,7 +3,7 @@ import json
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 from pydantic import BaseModel
 
-from promptwright import PromptBuilder
+from promptsight import PromptBuilder
 
 
 class SentimentResult(BaseModel):

@@ -1,10 +1,10 @@
-"""Example: Running Golden Set Regression Testing with promptwright."""
+"""Example: Running Golden Set Regression Testing with promptsight."""
 
 import json
 from pydantic import BaseModel, Field
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 
-from promptwright import (
+from promptsight import (
     GoldenSet,
     GoldenSetRunner,
     create_extraction_prompt,

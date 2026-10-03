@@ -1,6 +1,6 @@
 # Renderers & Token Optimization
 
-The renderer module ([`src/promptwright/renderers/`](../../src/promptwright/renderers/)) handles compiling `PromptSections` AST into concrete template strings. It decouples formatting concerns from data storage (SRP) and enables custom syntax output (DIP & OCP).
+The renderer module ([`src/promptsight/renderers/`](../../src/promptsight/renderers/)) handles compiling `PromptSections` AST into concrete template strings. It decouples formatting concerns from data storage (SRP) and enables custom syntax output (DIP & OCP).
 
 ---
 
@@ -26,7 +26,7 @@ The default implementation is `MarkdownSectionRenderer`.
 
 When building structured workflows, repeating a verbose JSON Schema in both the system prompt **and** the LLM tool-calling API wastes tokens and increases latency.
 
-PromptWright solves this with three distinct `SchemaMode` strategies:
+PromptSight solves this with three distinct `SchemaMode` strategies:
 
 ### 1. `mode="full"` (Default)
 Emits the entire JSON Schema inside the prompt. Essential when using completion models or standard `JsonOutputParser` / `PydanticOutputParser` where the model receives no external tool definitions.
@@ -79,7 +79,7 @@ LangChain's `template_format="f-string"` evaluates any `{...}` pattern as a temp
 - Inline JSON examples: `{"status": 200}`
 - Code snippets: `def foo(): return {"a": 1}`
 
-PromptWright's escaper ([`src/promptwright/utils/escaping.py`](../../src/promptwright/utils/escaping.py)):
+PromptSight's escaper ([`src/promptsight/utils/escaping.py`](../../src/promptsight/utils/escaping.py)):
 1. Preserves registered input variables (`{invoice_text}`).
 2. Preserves already escaped braces (`{{` and `}}`).
 3. Automatically doubles unescaped literal braces (`\d{{2,4}}`, `{{"status": 200}}`) so LangChain compiles without error.

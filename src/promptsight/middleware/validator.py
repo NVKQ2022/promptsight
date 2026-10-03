@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import List, Optional, Sequence
 
-from promptwright.middleware.base import PromptValidator, ValidationIssue
-from promptwright.middleware.rules import (
+from promptsight.middleware.base import PromptValidator, ValidationIssue
+from promptsight.middleware.rules import (
     ConstraintsStyleRule,
     OutputFormatRule,
     RoleAndGoalRule,
@@ -13,7 +13,7 @@ from promptwright.middleware.rules import (
     ValidationRule,
     VerificationChecklistRule,
 )
-from promptwright.sections import PromptSections
+from promptsight.sections import PromptSections
 
 DEFAULT_RULES: Sequence[ValidationRule] = (
     RoleAndGoalRule(),

@@ -1,6 +1,6 @@
 # Golden Set Evaluation & Regression Testing
 
-The evaluation module ([`src/promptwright/eval/`](../../src/promptwright/eval/)) directly implements **[Prompt Engineering Specification §17](../spec.md#17-prompt-testing-and-evaluation)**. It treats prompts as versioned code artifacts and automates regression benchmarking.
+The evaluation module ([`src/promptsight/eval/`](../../src/promptsight/eval/)) directly implements **[Prompt Engineering Specification §17](../spec.md#17-prompt-testing-and-evaluation)**. It treats prompts as versioned code artifacts and automates regression benchmarking.
 
 ---
 
@@ -41,7 +41,7 @@ Golden sets can be defined in Python code, JSON files, or YAML files:
 
 ### Loading in Python
 ```python
-from promptwright import GoldenSet
+from promptsight import GoldenSet
 
 golden_set = GoldenSet.from_file("golden_set.json")
 ```
@@ -51,7 +51,7 @@ golden_set = GoldenSet.from_file("golden_set.json")
 ## 🚀 Running Benchmarks with `GoldenSetRunner`
 
 ```python
-from promptwright import GoldenSet, GoldenSetRunner, SchemaComplianceEvaluator, FieldMatchEvaluator
+from promptsight import GoldenSet, GoldenSetRunner, SchemaComplianceEvaluator, FieldMatchEvaluator
 
 # 1. Initialize runner
 runner = GoldenSetRunner(

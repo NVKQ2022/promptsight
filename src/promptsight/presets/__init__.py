@@ -1,10 +1,10 @@
 """Pre-engineered prompt presets for standard tasks."""
 
-from promptwright.presets.classification import (
+from promptsight.presets.classification import (
     DefaultClassificationResult,
     create_classification_prompt,
 )
-from promptwright.presets.extraction import create_extraction_prompt
+from promptsight.presets.extraction import create_extraction_prompt
 
 __all__ = [
     "create_extraction_prompt",

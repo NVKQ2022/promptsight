@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, Type, r
 
 from pydantic import BaseModel
 
-from promptwright.eval.models import GoldenTestCase
+from promptsight.eval.models import GoldenTestCase
 
 
 @runtime_checkable

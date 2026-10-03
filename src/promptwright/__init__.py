@@ -1,105 +1,20 @@
-"""PromptWright — Production-grade prompt engineering built on LangChain."""
+"""Backward-compatibility shim for promptwright -> promptsight transition."""
 
-from promptwright.builder import PromptBuilder
-from promptwright.chain import (
-    ChainStrategy,
-    ChainStrategyRegistry,
-    JsonChainStrategy,
-    PydanticChainStrategy,
-    RawChainStrategy,
-    StructuredChainStrategy,
-    build_chain,
-    register_chain_strategy,
-)
-from promptwright.eval import (
-    GoldenSet,
-    GoldenSetReport,
-    GoldenSetRunner,
-    GoldenTestCase,
-)
-from promptwright.few_shot import ExampleSelector, StaticExampleSelector
-from promptwright.meta import (
-    AIPromptGenerator,
-    GeneratedPromptSpec,
-    generate_prompt_from_task,
-)
-from promptwright.middleware import (
-    AntiPatternValidator,
-    AutoDelimiterMiddleware,
-    BaseMiddleware,
-    ConstraintsStyleRule,
-    IssueSeverity,
-    Middleware,
-    OutputFormatRule,
-    PipelineComponent,
-    PromptValidator,
-    RoleAndGoalRule,
-    SectionTransformer,
-    StrictGroundingMiddleware,
-    TaskClarityRule,
-    ValidationIssue,
-    ValidationRule,
-    VerificationChecklistRule,
-)
-from promptwright.presets import (
-    DefaultClassificationResult,
-    create_classification_prompt,
-    create_extraction_prompt,
-)
-from promptwright.renderers import MarkdownSectionRenderer, PromptRenderer
-from promptwright.sections import ContextBlock, Example, PromptSections
+import sys
+import warnings
 
-__version__ = "0.1.0"
+import promptsight as promptsight
+from promptsight import *  # noqa: F403
 
-__all__ = [
-    # Core Builder & Sections
-    "PromptBuilder",
-    "PromptSections",
-    "ContextBlock",
-    "Example",
-    "ExampleSelector",
-    "StaticExampleSelector",
-    # Renderers (SRP & DIP)
-    "PromptRenderer",
-    "MarkdownSectionRenderer",
-    # Middleware & Segregated Protocols (ISP & LSP)
-    "Middleware",
-    "SectionTransformer",
-    "PromptValidator",
-    "PipelineComponent",
-    "BaseMiddleware",
-    "ValidationIssue",
-    "IssueSeverity",
-    # Validation Rules (SRP & OCP)
-    "ValidationRule",
-    "RoleAndGoalRule",
-    "TaskClarityRule",
-    "OutputFormatRule",
-    "ConstraintsStyleRule",
-    "VerificationChecklistRule",
-    "AntiPatternValidator",
-    "AutoDelimiterMiddleware",
-    "StrictGroundingMiddleware",
-    # Chain Strategies (OCP & DIP)
-    "build_chain",
-    "ChainStrategy",
-    "ChainStrategyRegistry",
-    "StructuredChainStrategy",
-    "PydanticChainStrategy",
-    "JsonChainStrategy",
-    "RawChainStrategy",
-    "register_chain_strategy",
-    # Presets
-    "create_extraction_prompt",
-    "create_classification_prompt",
-    "DefaultClassificationResult",
-    # Evaluation (Challenge 4)
-    "GoldenSetRunner",
-    "GoldenSet",
-    "GoldenTestCase",
-    "GoldenSetReport",
-    # Meta-Prompting & AI Prompt Generation (§20)
-    "AIPromptGenerator",
-    "generate_prompt_from_task",
-    "GeneratedPromptSpec",
-]
+# Re-export all submodules so `import promptwright.builder` works seamlessly
+for mod_name, mod in list(sys.modules.items()):
+    if mod_name.startswith("promptsight"):
+        alias_name = "promptwright" + mod_name[len("promptsight") :]
+        sys.modules[alias_name] = mod
+
+warnings.warn(
+    "The 'promptwright' package has been renamed to 'promptsight'. "
+    "Please update your imports to 'promptsight'.",
+    DeprecationWarning,
+    stacklevel=2,
+)

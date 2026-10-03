@@ -1,6 +1,6 @@
 # Chain Strategies & LCEL Bridge
 
-The chain module ([`src/promptwright/chain.py`](../../src/promptwright/chain.py)) implements the **Strategy Pattern** to bind compiled `ChatPromptTemplate` instances to LangChain LLMs and output parsers.
+The chain module ([`src/promptsight/chain.py`](../../src/promptsight/chain.py)) implements the **Strategy Pattern** to bind compiled `ChatPromptTemplate` instances to LangChain LLMs and output parsers.
 
 ---
 
@@ -22,7 +22,7 @@ class ChainStrategy(Protocol):
 
 ## ⚡ Built-in Strategies
 
-PromptWright includes 4 standard execution modes:
+PromptSight includes 4 standard execution modes:
 
 ### 1. `"structured"` (`StructuredChainStrategy`)
 - **Engine**: `llm.with_structured_output(schema)`
@@ -62,11 +62,11 @@ chain = builder.to_chain(llm, mode="raw")
 
 ## 🔌 Registering Custom Strategies (Open/Closed Principle)
 
-You can register custom execution strategies (e.g. streaming structured parsers, fallback chains, LangSmith metadata decorators) without modifying PromptWright:
+You can register custom execution strategies (e.g. streaming structured parsers, fallback chains, LangSmith metadata decorators) without modifying PromptSight:
 
 ```python
 from langchain_core.runnables import RunnableLambda
-from promptwright import ChainStrategy, register_chain_strategy
+from promptsight import ChainStrategy, register_chain_strategy
 
 class UpperCaseStrategy(ChainStrategy):
     def build(self, prompt, llm, schema=None):

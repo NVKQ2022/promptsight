@@ -1,8 +1,8 @@
-"""Example: Classification & Intent Routing using promptwright."""
+"""Example: Classification & Intent Routing using promptsight."""
 
 import json
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
-from promptwright import create_classification_prompt
+from promptsight import create_classification_prompt
 
 
 def main():

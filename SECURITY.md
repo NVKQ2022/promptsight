@@ -11,13 +11,13 @@
 
 ## Reporting a Vulnerability
 
-PromptWright takes security seriously, especially around prompt injection boundaries, variable escaping, and data delimiters.
+PromptSight takes security seriously, especially around prompt injection boundaries, variable escaping, and data delimiters.
 
 If you discover a security vulnerability or vulnerability related to delimiter breakout or prompt injection bypass:
 
 1. **Do not open a public GitHub issue.**
 2. Send an email to [nguyenvietkyquan2022@gmail.com](mailto:nguyenvietkyquan2022@gmail.com) with the subject:
-   `[SECURITY] PromptWright Vulnerability Report`.
+   `[SECURITY] PromptSight Vulnerability Report`.
 3. Include:
    - Description of the vulnerability and attack vector
    - Steps to reproduce or a minimal proof of concept (PoC)

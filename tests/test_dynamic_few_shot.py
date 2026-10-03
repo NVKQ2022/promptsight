@@ -1,6 +1,6 @@
 """Tests for dynamic few-shot example selection (Challenge 2)."""
 
-from promptwright import ExampleSelector, PromptBuilder
+from promptsight import ExampleSelector, PromptBuilder
 
 
 class QueryMatchingSelector(ExampleSelector):

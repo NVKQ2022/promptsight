@@ -1,4 +1,4 @@
-from promptwright import create_classification_prompt
+from promptsight import create_classification_prompt
 
 
 def test_classification_preset_builds_valid_prompt():

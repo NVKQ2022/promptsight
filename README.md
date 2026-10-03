@@ -1,4 +1,4 @@
-# ✍️ PromptWright
+# ✍️ PromptSight
 
 > **Production-grade, opinionated prompt engineering framework built on top of LangChain.**
 
@@ -6,7 +6,7 @@
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![LangChain](https://img.shields.io/badge/LangChain-core-green.svg)](https://github.com/langchain-ai/langchain)
 
-`promptwright` turns prompt engineering principles into code. Instead of writing brittle natural language strings, developers declare structured prompts with a fluent **Builder + Middleware** pattern that compiles into production-ready LangChain `ChatPromptTemplate` and LCEL runnable sequences.
+`promptsight` turns prompt engineering principles into code. Instead of writing brittle natural language strings, developers declare structured prompts with a fluent **Builder + Middleware** pattern that compiles into production-ready LangChain `ChatPromptTemplate` and LCEL runnable sequences.
 
 ---
 
@@ -23,13 +23,13 @@
 ## 📦 Installation
 
 ```bash
-pip install promptwright
+pip install promptsight
 ```
 
 Or with `uv`:
 
 ```bash
-uv add promptwright
+uv add promptsight
 ```
 
 ---
@@ -57,7 +57,7 @@ Comprehensive guides and architectural references are available in the [`docs/`]
 
 ```python
 from pydantic import BaseModel, Field
-from promptwright import PromptBuilder
+from promptsight import PromptBuilder
 
 class CodeReview(BaseModel):
     summary: str = Field(description="High-level summary of review")
@@ -96,7 +96,7 @@ prompt = (
 Have an LLM design production-grade prompts for you following the specification (§20):
 
 ```python
-from promptwright import generate_prompt_from_task
+from promptsight import generate_prompt_from_task
 
 spec = generate_prompt_from_task(
     user_task="Extract invoice total, vendor, line items, and flag overdue balances from emails.",
@@ -122,7 +122,7 @@ Extract structured entities from raw, unstructured documents without hallucinati
 ```python
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from promptwright import create_extraction_prompt
+from promptsight import create_extraction_prompt
 
 class LineItem(BaseModel):
     item_name: str
@@ -152,7 +152,7 @@ prompt = extraction_builder.build()
 Classify text strictly within an allowed taxonomy with reasoning & evidence citations:
 
 ```python
-from promptwright import create_classification_prompt
+from promptsight import create_classification_prompt
 
 categories = ["billing", "technical_support", "account_access", "other"]
 
@@ -176,7 +176,7 @@ prompt = classification_builder.build()
 Attach cross-cutting concerns using `.use(middleware)`:
 
 ```python
-from promptwright import (
+from promptsight import (
     PromptBuilder,
     StrictGroundingMiddleware,
     AutoDelimiterMiddleware,
@@ -208,7 +208,7 @@ builder.use(add_citation_rule)
 
 ## 🛡️ Anti-Pattern Quality Gate
 
-`promptwright` checks your prompt at build time against common prompt pitfalls:
+`promptsight` checks your prompt at build time against common prompt pitfalls:
 - ❌ **Vague verbs**: flags `"handle"`, `"process"`, `"deal with"` -> suggests specific verbs like `"extract"`, `"classify"`.
 - ❌ **Decorative roles**: flags `"You are an expert"` -> encourages domain-specific roles.
 - ❌ **Missing format**: flags absence of an output schema or format specification.
@@ -237,7 +237,7 @@ builder.output_schema(Invoice, mode="tools_only")
 Pass any LangChain `BaseExampleSelector` (e.g. Chroma/FAISS semantic search) or custom selector:
 
 ```python
-from promptwright import PromptBuilder
+from promptsight import PromptBuilder
 
 builder = (
     PromptBuilder()
@@ -255,7 +255,7 @@ builder = (
 Treat prompts as versioned code with automated regression benchmarking:
 
 ```python
-from promptwright import GoldenSet, GoldenSetRunner
+from promptsight import GoldenSet, GoldenSetRunner
 
 # 1. Load golden test cases
 golden_set = GoldenSet.from_file("tests/golden_set.json")

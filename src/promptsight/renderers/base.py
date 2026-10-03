@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Optional, Protocol, runtime_checkable
 
-from promptwright.sections import PromptSections
+from promptsight.sections import PromptSections
 
 
 @runtime_checkable

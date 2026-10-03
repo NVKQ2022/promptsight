@@ -1,17 +1,17 @@
-# Contributing to PromptWright
+# Contributing to PromptSight
 
-Thank you for your interest in contributing to PromptWright! We welcome contributions ranging from bug fixes and documentation improvements to new anti-pattern validation rules and model presets.
+Thank you for your interest in contributing to PromptSight! We welcome contributions ranging from bug fixes and documentation improvements to new anti-pattern validation rules and model presets.
 
 ---
 
 ## 🛠️ Development Setup
 
-PromptWright uses [`uv`](https://docs.astral.sh/uv/) for high-speed dependency and virtualenv management, and Python ≥ 3.11.
+PromptSight uses [`uv`](https://docs.astral.sh/uv/) for high-speed dependency and virtualenv management, and Python ≥ 3.11.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/NVKQ2022/promptwright.git
-   cd promptwright
+   git clone https://github.com/NVKQ2022/promptsight.git
+   cd promptsight
    ```
 
 2. **Create and activate a virtual environment:**

@@ -1,12 +1,12 @@
 # Middleware & Quality Gate Architecture
 
-The middleware architecture in PromptWright ([`src/promptwright/middleware/`](../../src/promptwright/middleware/)) enables cross-cutting concerns—such as compile-time linting, non-hallucination guardrail injection, and XML wrapping—without polluting the core builder.
+The middleware architecture in PromptSight ([`src/promptsight/middleware/`](../../src/promptsight/middleware/)) enables cross-cutting concerns—such as compile-time linting, non-hallucination guardrail injection, and XML wrapping—without polluting the core builder.
 
 ---
 
 ## 🔌 Segregated Protocols (Interface Segregation Principle)
 
-PromptWright splits middleware into two granular protocols:
+PromptSight splits middleware into two granular protocols:
 
 ```python
 @runtime_checkable
@@ -28,7 +28,7 @@ You can pass a pure transformer, a pure validator, a composite middleware, or a 
 
 ## 🛡️ Built-in Anti-Pattern Rules (PromtEngineering.md §15)
 
-PromptWright evaluates prompts against common prompt engineering anti-patterns before compilation:
+PromptSight evaluates prompts against common prompt engineering anti-patterns before compilation:
 
 | Rule Class | Code | What It Catches | Recommendation / Fix |
 |---|---|---|---|
@@ -62,7 +62,7 @@ Implements [Prompt Engineering Specification §14](../spec.md#14-handling-ambigu
 - Injects verification self-check item.
 
 ```python
-from promptwright import StrictGroundingMiddleware
+from promptsight import StrictGroundingMiddleware
 
 builder.use(StrictGroundingMiddleware(allow_guessing=False))
 ```
@@ -73,7 +73,7 @@ Implements [Prompt Engineering Specification §10](../spec.md#10-delimit-inputs)
 - Appends prompt-injection guardrails instructing the model to treat content strictly as passive data.
 
 ```python
-from promptwright import AutoDelimiterMiddleware
+from promptsight import AutoDelimiterMiddleware
 
 builder.use(AutoDelimiterMiddleware(default_tag="document"))
 ```
@@ -93,7 +93,7 @@ builder.use(add_citation_rule)
 
 ### Method 2: Implementing a Class
 ```python
-from promptwright import ValidationIssue, ValidationRule
+from promptsight import ValidationIssue, ValidationRule
 
 class MaxTaskStepsRule(ValidationRule):
     def evaluate(self, sections: PromptSections) -> list[ValidationIssue]:

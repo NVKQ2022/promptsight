@@ -2,7 +2,7 @@
 
 import json
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
-from promptwright import generate_prompt_from_task
+from promptsight import generate_prompt_from_task
 
 
 def main():

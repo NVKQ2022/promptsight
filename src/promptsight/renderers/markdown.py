@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from promptwright.renderers.base import PromptRenderer
-from promptwright.sections import PromptSections
+from promptsight.renderers.base import PromptRenderer
+from promptsight.sections import PromptSections
 
 
 def _format_role(role: str) -> str:
@@ -89,7 +89,7 @@ class MarkdownSectionRenderer(PromptRenderer):
             if sections.output_format_text:
                 out_lines.append(sections.output_format_text)
             elif sections.output_schema is not None:
-                from promptwright.schemas import render_schema_format_text
+                from promptsight.schemas import render_schema_format_text
 
                 schema_text = render_schema_format_text(
                     sections.output_schema,
@@ -125,7 +125,7 @@ class MarkdownSectionRenderer(PromptRenderer):
 
         rendered = "\n\n".join(parts)
         if self.escape_braces_for_fstring:
-            from promptwright.utils.escaping import escape_fstring_braces
+            from promptsight.utils.escaping import escape_fstring_braces
 
             rendered = escape_fstring_braces(rendered, allowed_variables=sections.inputs.keys())
         return rendered
@@ -137,7 +137,7 @@ class MarkdownSectionRenderer(PromptRenderer):
     ) -> str:
         if custom_template:
             if self.escape_braces_for_fstring:
-                from promptwright.utils.escaping import escape_fstring_braces
+                from promptsight.utils.escaping import escape_fstring_braces
 
                 allowed = set(sections.inputs.keys()) if sections.inputs else None
                 return escape_fstring_braces(custom_template, allowed_variables=allowed)

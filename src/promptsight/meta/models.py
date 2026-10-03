@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
-    from promptwright.builder import PromptBuilder
+    from promptsight.builder import PromptBuilder
 
 
 class GeneratedExample(BaseModel):
@@ -70,7 +70,7 @@ class GeneratedPromptSpec(BaseModel):
 
     def to_builder(self) -> "PromptBuilder":
         """Convert the generated specification into a live PromptBuilder instance."""
-        from promptwright.builder import PromptBuilder
+        from promptsight.builder import PromptBuilder
 
         builder = PromptBuilder()
         builder.role(self.role)
@@ -105,7 +105,7 @@ class GeneratedPromptSpec(BaseModel):
 
     def to_markdown(self) -> str:
         """Render the generated prompt as clean, copy-paste ready Markdown per §19."""
-        from promptwright.renderers.markdown import _format_role
+        from promptsight.renderers.markdown import _format_role
 
         parts: List[str] = []
 

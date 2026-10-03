@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel, Field
 
-from promptwright import PromptBuilder
+from promptsight import PromptBuilder
 
 
 class ComplexDocument(BaseModel):

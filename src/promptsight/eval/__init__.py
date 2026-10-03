@@ -1,18 +1,18 @@
 """Evaluation and Golden Set regression testing framework (PromtEngineering.md §17)."""
 
-from promptwright.eval.evaluators import (
+from promptsight.eval.evaluators import (
     CustomFunctionEvaluator,
     Evaluator,
     FieldMatchEvaluator,
     SchemaComplianceEvaluator,
 )
-from promptwright.eval.models import (
+from promptsight.eval.models import (
     EvaluationResult,
     GoldenSet,
     GoldenSetReport,
     GoldenTestCase,
 )
-from promptwright.eval.runner import GoldenSetRunner
+from promptsight.eval.runner import GoldenSetRunner
 
 __all__ = [
     "GoldenTestCase",

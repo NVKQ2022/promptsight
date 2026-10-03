@@ -1,6 +1,6 @@
 import pytest
 
-from promptwright import IssueSeverity, PromptBuilder
+from promptsight import IssueSeverity, PromptBuilder
 
 
 def test_anti_pattern_vague_verb_detected():

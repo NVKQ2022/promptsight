@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from promptwright import create_extraction_prompt
+from promptsight import create_extraction_prompt
 
 
 class LineItem(BaseModel):

@@ -1,6 +1,6 @@
-# 📚 PromptWright Documentation
+# 📚 PromptSight Documentation
 
-Welcome to the **PromptWright** documentation. PromptWright is a production-grade, opinionated prompt engineering framework built on top of LangChain. It translates the rules of rigorous prompt engineering ([spec.md](spec.md)) into clean, reusable Python code.
+Welcome to the **PromptSight** documentation. PromptSight is a production-grade, opinionated prompt engineering framework built on top of LangChain. It translates the rules of rigorous prompt engineering ([spec.md](spec.md)) into clean, reusable Python code.
 
 ---
 
@@ -36,7 +36,7 @@ docs/
 
 | Topic | Document | Description |
 |---|---|---|
-| **Architecture** | [`architecture/overview.md`](architecture/overview.md) | How SOLID principles are implemented across PromptWright |
+| **Architecture** | [`architecture/overview.md`](architecture/overview.md) | How SOLID principles are implemented across PromptSight |
 | **Builder Guide** | [`core/builder.md`](core/builder.md) | Step-by-step guide to constructing prompts with `PromptBuilder` |
 | **AI Prompt Generator** | [`meta/ai-prompt-generator.md`](meta/ai-prompt-generator.md) | Using LLM to engineer prompts from user task descriptions |
 | **Data Extraction** | [`presets/extraction.md`](presets/extraction.md) | Extracting structured entities without hallucination |

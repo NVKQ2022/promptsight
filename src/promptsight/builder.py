@@ -16,9 +16,9 @@ try:
 except ImportError as e:  # pragma: no cover
     raise ImportError("langchain-core is required. Install with: pip install langchain-core") from e
 
-from promptwright.chain import ChainStrategy, build_chain
-from promptwright.few_shot import format_example_payload
-from promptwright.middleware.base import (
+from promptsight.chain import ChainStrategy, build_chain
+from promptsight.few_shot import format_example_payload
+from promptsight.middleware.base import (
     IssueSeverity,
     PipelineComponent,
     PromptValidator,
@@ -27,10 +27,10 @@ from promptwright.middleware.base import (
     is_transformer,
     is_validator,
 )
-from promptwright.middleware.validator import AntiPatternValidator
-from promptwright.renderers.base import PromptRenderer
-from promptwright.renderers.markdown import MarkdownSectionRenderer
-from promptwright.sections import ContextBlock, Example, PromptSections
+from promptsight.middleware.validator import AntiPatternValidator
+from promptsight.renderers.base import PromptRenderer
+from promptsight.renderers.markdown import MarkdownSectionRenderer
+from promptsight.sections import ContextBlock, Example, PromptSections
 
 
 class PromptBuilder:
@@ -289,7 +289,7 @@ class PromptBuilder:
             ex_prompt = self._custom_example_prompt or default_example_prompt
 
             if sections.example_selector is not None:
-                from promptwright.few_shot import ensure_base_example_selector
+                from promptsight.few_shot import ensure_base_example_selector
 
                 few_shot = FewShotChatMessagePromptTemplate(
                     example_selector=ensure_base_example_selector(sections.example_selector),

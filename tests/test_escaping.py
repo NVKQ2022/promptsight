@@ -1,7 +1,7 @@
 """Tests for intelligent f-string template brace escaping (Challenge 3)."""
 
-from promptwright import PromptBuilder
-from promptwright.utils.escaping import escape_fstring_braces
+from promptsight import PromptBuilder
+from promptsight.utils.escaping import escape_fstring_braces
 
 
 def test_escape_fstring_braces_preserves_allowed_vars():

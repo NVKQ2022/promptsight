@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from promptwright.middleware.base import SectionTransformer
-from promptwright.sections import PromptSections
+from promptsight.middleware.base import SectionTransformer
+from promptsight.sections import PromptSections
 
 
 class StrictGroundingMiddleware(SectionTransformer):

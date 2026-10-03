@@ -1,4 +1,4 @@
-from promptwright import (
+from promptsight import (
     BaseMiddleware,
     PromptBuilder,
     PromptSections,

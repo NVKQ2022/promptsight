@@ -1,6 +1,6 @@
 # Use Case Preset: Structured Data Extraction
 
-The extraction preset ([`src/promptwright/presets/extraction.py`](../../src/promptwright/presets/extraction.py)) provides a production-hardened prompt for extracting structured data from unstructured text without hallucination.
+The extraction preset ([`src/promptsight/presets/extraction.py`](../../src/promptsight/presets/extraction.py)) provides a production-hardened prompt for extracting structured data from unstructured text without hallucination.
 
 ---
 
@@ -33,7 +33,7 @@ def create_extraction_prompt(
 ```python
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from promptwright import create_extraction_prompt
+from promptsight import create_extraction_prompt
 
 # 1. Define the schema
 class LineItem(BaseModel):

@@ -47,7 +47,7 @@ class PromptSections:
 
     def render_system_prompt(self, escape_braces_for_fstring: bool = True) -> str:
         """Backward-compatibility proxy delegating to MarkdownSectionRenderer."""
-        from promptwright.renderers.markdown import MarkdownSectionRenderer
+        from promptsight.renderers.markdown import MarkdownSectionRenderer
 
         return MarkdownSectionRenderer(
             escape_braces_for_fstring=escape_braces_for_fstring

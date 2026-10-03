@@ -5,8 +5,8 @@ from __future__ import annotations
 import re
 from typing import List, Protocol, runtime_checkable
 
-from promptwright.middleware.base import IssueSeverity, ValidationIssue
-from promptwright.sections import PromptSections
+from promptsight.middleware.base import IssueSeverity, ValidationIssue
+from promptsight.sections import PromptSections
 
 VAGUE_VERBS = {
     "handle",
